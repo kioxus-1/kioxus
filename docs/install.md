@@ -1,4 +1,4 @@
-# Kioxus 安装指南
+﻿# Kioxus 安装指南
 
 ## 方式一：下载exe（推荐）
 
@@ -48,7 +48,7 @@ python scripts/build.py
 ## 运行测试
 
 ```bash
-pytest test/
+pytest tests/
 ```
 
 开发依赖：

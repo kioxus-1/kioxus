@@ -58,7 +58,7 @@ kioxus/
 │   ├── api.md               #   核心接口
 │   └── install.md           #   安装指南
 │
-├── test/                    # 测试代码
+├── tests/                    # 测试代码
 │
 ├── requirements.txt         # Python依赖
 ├── requirements-dev.txt     # 开发测试依赖
@@ -120,9 +120,9 @@ python scripts/build.py
 ## 测试
 
 ```bash
-pytest test/                    # 全量测试（43个）
-pytest test/ -x                 # 遇到第一个失败就停止
-pytest test/ -v                 # 详细输出
+pytest tests/                    # 全量测试（43个）
+pytest tests/ -x                 # 遇到第一个失败就停止
+pytest tests/ -v                 # 详细输出
 ```
 
 ## 版本历史

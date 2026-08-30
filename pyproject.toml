@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "kioxus"
+version = "0.3.0"
+description = "A lightweight, extensible autonomous agent framework"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    {name = "kioxus-1"},
+]
+keywords = ["agent", "ai", "llm", "autonomous", "framework"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "flask>=2.0,<4",
+    "python-dotenv>=1.0,<2",
+    "numpy>=1.24,<3",
+    "requests>=2.31,<3",
+    "pywebview>=4.0,<6",
+    "tqdm>=4.60,<5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0,<9",
+    "black>=23.0,<25",
+    "flake8>=6.0,<8",
+]
+
+[project.urls]
+Homepage = "https://github.com/kioxus-1/kioxus"
+Repository = "https://github.com/kioxus-1/kioxus"
+Issues = "https://github.com/kioxus-1/kioxus/issues"
+
+[project.scripts]
+kioxus = "kioxus.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

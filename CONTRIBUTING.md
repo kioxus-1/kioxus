@@ -1,4 +1,4 @@
-# Contributing to Kioxus
+﻿# Contributing to Kioxus
 
 欢迎贡献代码！
 
@@ -22,7 +22,7 @@ pip install -r requirements-dev.txt
 ## 运行测试
 
 ```bash
-pytest test/
+pytest tests/
 ```
 
 ## 代码规范
