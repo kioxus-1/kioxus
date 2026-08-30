@@ -1,0 +1,10 @@
+﻿# Kioxus 配置示例
+# 复制此文件为 config.yaml，填入你自己的信息
+
+llm:
+  provider: xiaomi  # xiaomi / minimax / mock
+  api_key: "YOUR_API_KEY_HERE"
+
+memory:
+  max_entries: 1000
+  compress_threshold: 500

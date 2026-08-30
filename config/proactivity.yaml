@@ -1,0 +1,16 @@
+allowed_actions:
+- schedule_reminder
+- weather_reminder
+- info_summary
+- task_suggestion
+denied_actions: []
+level: 3
+max_daily_interventions: 50
+quiet_hours:
+  enabled: true
+  end_hour: 8
+  end_minute: 0
+  start_hour: 22
+  start_minute: 0
+  timezone: Asia/Shanghai
+report_interval_seconds: 300

@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "tags": [
+    {
+      "name": "python",
+      "status": "active",
+      "created_at": 1784809571.6087928,
+      "last_used": 1784809607.1494906,
+      "use_count": 2,
+      "merged_to": null
+    },
+    {
+      "name": "typescript",
+      "status": "active",
+      "created_at": 1784809571.608796,
+      "last_used": 1784809607.1398153,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "javascript",
+      "status": "active",
+      "created_at": 1784809571.608797,
+      "last_used": 1784809571.6087976,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "错误",
+      "status": "active",
+      "created_at": 1784809571.6087985,
+      "last_used": 1784809571.6087985,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "认知",
+      "status": "active",
+      "created_at": 1784809571.6087995,
+      "last_used": 1784809607.168807,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "关系",
+      "status": "active",
+      "created_at": 1784809571.6088002,
+      "last_used": 1784809571.6088004,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "学习",
+      "status": "active",
+      "created_at": 1784809571.6088011,
+      "last_used": 1784809571.6088014,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "用户偏好",
+      "status": "active",
+      "created_at": 1784809571.6088016,
+      "last_used": 1784810114.2562156,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "项目配置",
+      "status": "active",
+      "created_at": 1784809571.6088023,
+      "last_used": 1784809571.6088023,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "代码生成",
+      "status": "active",
+      "created_at": 1784809571.6088026,
+      "last_used": 1784809571.6088028,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "决策模式",
+      "status": "active",
+      "created_at": 1784809571.608803,
+      "last_used": 1784809571.6088033,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "沟通方式",
+      "status": "active",
+      "created_at": 1784809571.6088061,
+      "last_used": 1784809571.6088064,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "工作流",
+      "status": "active",
+      "created_at": 1784809571.6088068,
+      "last_used": 1784809571.6088068,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "记忆系统",
+      "status": "active",
+      "created_at": 1784809571.6088073,
+      "last_used": 1784810114.262777,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "压缩逻辑",
+      "status": "active",
+      "created_at": 1784809571.608808,
+      "last_used": 1784810114.2627814,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "代码风格",
+      "status": "active",
+      "created_at": 1784809571.6088085,
+      "last_used": 1784810114.2561975,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "语法兼容性",
+      "status": "active",
+      "created_at": 1784809571.608809,
+      "last_used": 1784809571.608809,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "技术问题",
+      "status": "active",
+      "created_at": 1784809571.6088095,
+      "last_used": 1784809571.6088095,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "外部事件",
+      "status": "active",
+      "created_at": 1784809571.60881,
+      "last_used": 1784809571.60881,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "测试",
+      "status": "pending",
+      "created_at": 1784809607.1495144,
+      "last_used": 1784809607.168812,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "openclaw",
+      "status": "pending",
+      "created_at": 1784810114.2691429,
+      "last_used": 1784810114.2691436,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "用户信息",
+      "status": "pending",
+      "created_at": 1784859255.866128,
+      "last_used": 1784879240.4958124,
+      "use_count": 6,
+      "merged_to": null
+    },
+    {
+      "name": "名字",
+      "status": "pending",
+      "created_at": 1784859255.8748462,
+      "last_used": 1784879240.4958177,
+      "use_count": 4,
+      "merged_to": null
+    },
+    {
+      "name": "偏好",
+      "status": "pending",
+      "created_at": 1784862133.776429,
+      "last_used": 1784865168.0160162,
+      "use_count": 1,
+      "merged_to": null
+    },
+    {
+      "name": "对话记录",
+      "status": "pending",
+      "created_at": 1784862365.1790915,
+      "last_used": 1784879666.9788985,
+      "use_count": 5,
+      "merged_to": null
+    },
+    {
+      "name": "反思",
+      "status": "pending",
+      "created_at": 1784879245.266347,
+      "last_used": 1784879245.2663474,
+      "use_count": 0,
+      "merged_to": null
+    },
+    {
+      "name": "会话",
+      "status": "pending",
+      "created_at": 1784879245.2712157,
+      "last_used": 1784879245.2712162,
+      "use_count": 0,
+      "merged_to": null
+    }
+  ],
+  "aliases": {
+    "ts": "typescript",
+    "js": "javascript",
+    "前端": "typescript",
+    "编码规范": "代码风格"
+  },
+  "co_occurrence": {
+    "python": {
+      "测试": 1
+    },
+    "测试": {
+      "python": 1,
+      "认知": 1
+    },
+    "认知": {
+      "测试": 1
+    },
+    "代码风格": {
+      "用户偏好": 1
+    },
+    "用户偏好": {
+      "代码风格": 1
+    },
+    "记忆系统": {
+      "压缩逻辑": 1
+    },
+    "压缩逻辑": {
+      "记忆系统": 1
+    },
+    "用户信息": {
+      "名字": 5,
+      "偏好": 2
+    },
+    "名字": {
+      "用户信息": 5
+    },
+    "偏好": {
+      "用户信息": 2
+    },
+    "反思": {
+      "会话": 1
+    },
+    "会话": {
+      "反思": 1
+    }
+  },
+  "tag_tree": {
+    "用户信息": [
+      "名字"
+    ],
+    "名字": [
+      "用户信息"
+    ]
+  }
+}

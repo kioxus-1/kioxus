@@ -1,0 +1,28 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+*.egg
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+build/
+*.spec
+
+# Data (runtime)
+data/sessions/
+data/memory_v2/
+data/memory_runtime/
