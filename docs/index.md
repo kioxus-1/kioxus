@@ -1,4 +1,4 @@
-# Kioxus 文档
+﻿# Kioxus 文档
 
 > Kioxus — 一个能自己思考、记忆、验证的AI助手
 
@@ -48,7 +48,7 @@
 
 AI（Artificial Intelligence，人工智能）是让计算机像人一样思考和回答问题的技术。
 
-你平时用的Siri、小爱同学、ChatGPT，都是AI。它们能听懂你说的话，然后给你回答。
+AI能听懂你说的话，然后给你回答。常见的AI有语音助手、对话机器人等。
 
 **关键点**：AI不是真的有"智能"，它是通过大量数据训练出来的程序。它看起来像在思考，其实是在根据学到的规律生成回答。
 
@@ -60,15 +60,13 @@ LLM（Large Language Model，大语言模型）是AI的一种，专门用来理�
 
 **通俗理解**：LLM读过互联网上几乎所有的文字（书、文章、网页），所以它"知道"很多事情。你问它问题，它根据读过的内容来回答。
 
-**常见的LLM服务**：
+**Kioxus支持的LLM服务**：
 
-| 名称 | 公司 | 说明 |
-|------|------|------|
-| ChatGPT | OpenAI | 最知名的AI对话服务 |
-| Claude | Anthropic | 另一个知名的AI对话服务 |
-| MiMo | 小米 | 小米公司的AI模型 |
-| MiniMax | MiniMax公司 | 国产AI模型 |
-| DeepSeek | DeepSeek公司 | 国产AI模型 |
+| 名称 | 说明 |
+|------|------|
+| MiMo | 小米公司的AI模型 |
+| MiniMax | MiniMax公司的AI模型 |
+| 其他 | 支持多种AI服务 |
 
 **关键点**：LLM不是万能的。它可能回答错误，也可能编造不存在的信息。所以Kioxus有"验证器"来检查它的回答。
 
@@ -89,7 +87,7 @@ API Key（API密钥）是你使用AI服务的"通行证"。
 **通俗理解**：就像你去游泳馆需要办一张会员卡，卡上有卡号和密码。API Key就是你的卡号+密码，没有它你就用不了AI服务。
 
 **怎么获取API Key**：
-1. 去AI服务商的网站注册账号（比如小米MiMo、OpenAI）
+1. 去AI服务商的网站注册账号（比如小米MiMo）
 2. 在账号设置里找到"API Key"或"密钥"选项
 3. 点击"生成"或"创建"
 4. 复制生成的密钥（一串字母和数字的组合）
@@ -102,7 +100,7 @@ API Key（API密钥）是你使用AI服务的"通行证"。
 
 Agent（智能体）是一个能自主完成任务的AI程序。
 
-**通俗理解**：普通的AI对话工具（比如ChatGPT网页版）只能你问一句它答一句。Agent更进一步——它能自己思考、做计划、使用工具、检查结果。
+**通俗理解：普通的AI对话工具只能你问一句它答一句。Agent更进一步——它能自己思考、做计划、使用工具、检查结果。
 
 **Agent和普通AI的区别**：
 
@@ -207,7 +205,7 @@ Token是AI处理文字的最小单位。
 
 Kioxus是一个自主Agent——一个能自己思考、记忆、使用工具、验证回答的AI助手。
 
-你可以把它理解为一个"本地版的ChatGPT"，但它：
+Kioxus的特点：
 - 能帮你执行代码
 - 能记住你说过的话
 - 能检查自己的回答是否正确
@@ -274,8 +272,6 @@ pip install -r requirements.txt
 |------|------|------|
 | 小米MiMo | https://xiaomimimo.com | 国产AI服务 |
 | MiniMax | https://minimax.chat | 国产AI服务 |
-| OpenAI | https://platform.openai.com | ChatGPT的API服务 |
-| DeepSeek | https://platform.deepseek.com | 国产AI服务 |
 
 注册账号后，在账号设置里找到"API Key"或"密钥"选项，生成一个Key。
 
@@ -284,8 +280,8 @@ pip install -r requirements.txt
 1. 打开Kioxus
 2. 点击左侧的 **设置**
 3. 在 **LLM 配置** 区域填写：
-   - **Provider**：填你用的AI服务名称（比如 `xiaomi`、`openai`）
-   - **API URL**：填AI服务的地址（比如 `https://api.openai.com/v1/chat/completions`）
+   - **Provider**：填你用的AI服务名称（比如 `xiaomi`）
+   - **API URL**：填AI服务的地址（比如小米的 `https://token-plan-cn.xiaomimimo.com/v1/chat/completions`）
    - **API Key**：填你刚才获取的密钥
    - **Model**：填模型名称（比如 `gpt-4o`、`mimo-v2.5-pro`）
 4. 点击 **保存配置**
@@ -299,8 +295,6 @@ pip install -r requirements.txt
 |------|---------|-------|
 | 小米MiMo | `https://token-plan-cn.xiaomimimo.com/v1/chat/completions` | `mimo-v2.5-pro` |
 | MiniMax | `https://api.minimax.chat/v1/text/chatcompletion_v2` | `MiniMax-Text-01` |
-| OpenAI | `https://api.openai.com/v1/chat/completions` | `gpt-4o` |
-| DeepSeek | `https://api.deepseek.com/v1/chat/completions` | `deepseek-chat` |
 
 ---
 
@@ -490,7 +484,6 @@ pytest test/ -x                      # 遇到失败就停止
 
 ```
 XIAOMI_TOKEN_PLAN_API_KEY=***
-OPENAI_API_KEY=***
 ```
 
 这个文件存放真实的API Key，不会上传到GitHub。
@@ -510,9 +503,7 @@ OPENAI_API_KEY=***
 |----------|---------|---------|
 | 小米 MiMo | `XIAOMI_TOKEN_PLAN_API_KEY` | mimo-v2.5-pro |
 | MiniMax | `MINIMAX_API_KEY` | MiniMax-Text-01 |
-| OpenAI | `OPENAI_API_KEY` | gpt-4o |
-| DeepSeek | `DEEPSEEK_API_KEY` | deepseek-chat |
-| 任意OpenAI兼容 | 自定义 | 自定义 |
+| 自定义 | 自定义 | 自定义 |
 
 ### 添加自定义Provider
 
@@ -568,13 +559,13 @@ XIAOMI_TOKEN_PLAN_API_KEY=***
 ## FAQ
 
 ### Q: Kioxus是什么？
-A: Kioxus是一个AI助手，能自己思考、记忆、使用工具、验证回答。你可以把它理解为一个"本地版的ChatGPT"。
+A: Kioxus是一个AI助手，能自己思考、记忆、使用工具、验证回答。一个能自己思考、记忆、使用工具、验证回答的AI助手。
 
 ### Q: Kioxus免费吗？
 A: Kioxus本身免费开源。但你需要一个AI服务的API Key，AI服务可能会收费。
 
 ### Q: 支持哪些AI服务？
-A: 支持任意OpenAI兼容的API。内置小米MiMo和MiniMax，可自由添加。
+A: 支持小米MiMo和MiniMax，可自由添加其他AI服务。
 
 ### Q: API Key安全吗？
 A: .env在.gitignore中，不会上传GitHub。代码内部使用Key轮换和限流重试。

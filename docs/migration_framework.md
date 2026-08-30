@@ -1,32 +1,32 @@
-﻿# Kioxus Migration Framework - Hermes-Inspired Design
+﻿# Kioxus Migration Framework - 外部系统-Inspired Design
 
-> 基于 Hermes 迁移系统的研究，为 Kioxus 设计一套"安全、可预览、可逆"的迁移框架。
+> 基于 外部系统 迁移系统的研究，为 Kioxus 设计一套"安全、可预览、可逆"的迁移框架。
 
 ---
 
 ## 一、设计背景
 
-### Hermes 提供了什么
+### 外部系统 提供了什么
 
-Hermes（AgentX 的前身）有一个成熟的迁移系统：
+外部系统（Kioxus 的前身）有一个成熟的迁移系统：
 
 ```
-HermesSource → MigrationPlan → MigrationApply
+外部系统Source → MigrationPlan → MigrationApply
     ↓              ↓               ↓
   发现源        预览变更        执行变更
   (discover)    (plan)        (apply)
 ```
 
 **核心安全原则：预览-执行分离**
-- `migrate hermes --dry-run` 预览所有变更
-- `migrate apply hermes` 执行变更
+- `migrate 外部系统 --dry-run` 预览所有变更
+- `migrate apply 外部系统` 执行变更
 - 冲突时拒绝执行，需要 `--overwrite`
 
 ### Kioxus 现状
 
 Kioxus 目前没有迁移系统。但有以下潜在需求：
 
-1. **从其他 Agent 系统迁移** - 比如从 AgentX 导入记忆
+1. **从其他 Agent 系统迁移** - 比如从 Kioxus 导入记忆
 2. **备份与恢复** - 定期备份 Kioxus 状态，可恢复
 3. **多 workspace 支持** - 用户可能有多个 workspace
 4. **配置迁移** - 不同环境（dev/prod）的配置同步
@@ -49,7 +49,7 @@ Kioxus 目前没有迁移系统。但有以下潜在需求：
 
 ```typescript
 interface MigrationProvider {
-  id: string;                      // 唯一标识，如 "hermes", "AgentX", "kioxus-backup"
+  id: string;                      // 唯一标识，如 "外部系统", "Kioxus", "kioxus-backup"
   name: string;                    // 显示名称
   description: string;             // 说明
 
@@ -191,31 +191,31 @@ const migrationProviders = {
     // 用于恢复备份
   },
 
-  // 2. AgentX Provider (未来)
-  'AgentX': {
-    name: 'AgentX',
-    description: 'Import from AgentX workspace',
+  // 2. Kioxus Provider (未来)
+  'Kioxus': {
+    name: 'Kioxus',
+    description: 'Import from Kioxus workspace',
     // 发现 SOUL.md, MEMORY.md, USER.md, skills/
   },
 
-  // 3. Hermes Provider (未来)
-  'hermes': {
-    name: 'Hermes',
-    description: 'Import from Hermes workspace',
+  // 3. 外部系统 Provider (未来)
+  '外部系统': {
+    name: '外部系统',
+    description: 'Import from 外部系统 workspace',
     // 发现 config.yaml, memories/, skills/
   },
 };
 ```
 
-### 3.2 AgentX 迁移（示例）
+### 3.2 Kioxus 迁移（示例）
 
 ```typescript
-// 发现 AgentX workspace
-async function discoverAgentXSource(input?: string): Promise<MigrationSource> {
-  const root = input || '~/.AgentX';
+// 发现 Kioxus workspace
+async function discoverKioxusSource(input?: string): Promise<MigrationSource> {
+  const root = input || '~/.Kioxus';
 
   return {
-    provider: 'AgentX',
+    provider: 'Kioxus',
     root,
     files: [
       { path: 'SOUL.md', type: 'file' },
@@ -241,7 +241,7 @@ async function discoverAgentXSource(input?: string): Promise<MigrationSource> {
 ### 3.3 计划生成
 
 ```typescript
-async function planAgentXMigration(source: MigrationSource): Promise<MigrationPlan> {
+async function planKioxusMigration(source: MigrationSource): Promise<MigrationPlan> {
   const items: MigrationItem[] = [];
   const conflicts: ConflictItem[] = [];
   const warnings: WarningItem[] = [];
@@ -308,11 +308,11 @@ async function planAgentXMigration(source: MigrationSource): Promise<MigrationPl
   }
 
   return {
-    provider: 'AgentX',
+    provider: 'Kioxus',
     items,
     conflicts,
     warnings,
-    secrets: [], // AgentX 源没有认证文件（假设）
+    secrets: [], // Kioxus 源没有认证文件（假设）
   };
 }
 ```
@@ -434,7 +434,7 @@ async function rollback(result: ApplyResult): Promise<void> {
 | **IdentityCore** | 迁移后的 identity 文件会触发 IdentityCore 重新加载 |
 | **Markus Memory** | 追加的记忆会通过 MemoryIdentityBridge 处理 |
 | **PCAS** | 不受影响，迁移系统是独立模块 |
-| **Hermes Registry** | 使用 Hermes 作为注册表，但迁移系统独立 |
+| **外部系统 Registry** | 使用 外部系统 作为注册表，但迁移系统独立 |
 
 ### 5.2 整合点
 
@@ -456,7 +456,7 @@ class Kioxus {
   constructor() {
     // 注册内置迁移提供者
     this.migration.registerProvider(createKioxusBackupProvider());
-    this.migration.registerProvider(createAgentXProvider());
+    this.migration.registerProvider(createKioxusProvider());
   }
 }
 ```
@@ -501,15 +501,15 @@ hooks.register(
 kioxus migrate list
 
 # 预览迁移计划
-kioxus migrate AgentX --dry-run
-kioxus migrate AgentX --from ~/.AgentX --dry-run
+kioxus migrate Kioxus --dry-run
+kioxus migrate Kioxus --from ~/.Kioxus --dry-run
 
 # 执行迁移
-kioxus migrate apply AgentX --yes
-kioxus migrate apply AgentX --overwrite --yes
+kioxus migrate apply Kioxus --yes
+kioxus migrate apply Kioxus --overwrite --yes
 
 # 包含敏感信息
-kioxus migrate apply AgentX --include-secrets --yes
+kioxus migrate apply Kioxus --include-secrets --yes
 
 # 回滚
 kioxus migrate rollback <backup-path>
@@ -524,9 +524,9 @@ kioxus backup restore <backup-id>
 
 ```bash
 # dry-run 输出示例
-$ kioxus migrate AgentX --dry-run
+$ kioxus migrate Kioxus --dry-run
 
-Migration Plan: AgentX → Kioxus
+Migration Plan: Kioxus → Kioxus
 ========================================
 
 Items to apply:
@@ -575,10 +575,10 @@ Run with --overwrite to resolve conflicts, or review manually.
 
 ### 7.3 后续扩展
 
-1. **v0.2** - 基本迁移框架 + AgentX provider
-2. **v0.3** - Hermes provider + 回滚功能
+1. **v0.2** - 基本迁移框架 + Kioxus provider
+2. **v0.3** - 外部系统 provider + 回滚功能
 3. **v0.4** - 多 workspace 支持 + 备份调度
 
 ---
 
-**核心借鉴**：Hermes 的"预览-执行分离"和"敏感信息脱敏"是迁移系统的最佳实践。Kioxus 的 Migration Framework 基于此设计，但更适合 Kioxus 的 identity-first 哲学。
+**核心借鉴**：外部系统 的"预览-执行分离"和"敏感信息脱敏"是迁移系统的最佳实践。Kioxus 的 Migration Framework 基于此设计，但更适合 Kioxus 的 identity-first 哲学。
