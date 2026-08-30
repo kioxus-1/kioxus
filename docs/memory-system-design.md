@@ -703,7 +703,7 @@ Janitor 唤起 Flush Agent：
       {"fact": "注释用中文", "action": "代码注释中文", "tags": ["代码风格"]}
     ],
     "P1": [],
-    "P2": [{"fact": "讨论了OpenClaw记忆系统对比", "action": "参考OpenClaw设计", "tags": ["OpenClaw"]}]
+    "P2": [{"fact": "讨论了AgentX记忆系统对比", "action": "参考AgentX设计", "tags": ["AgentX"]}]
   },
   "unfinished_tasks": ["完成v3.2方案整合"],
   "atmosphere": "积极，有进展"

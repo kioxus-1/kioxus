@@ -1,4 +1,4 @@
-# Kioxus Migration Framework - Hermes-Inspired Design
+﻿# Kioxus Migration Framework - Hermes-Inspired Design
 
 > 基于 Hermes 迁移系统的研究，为 Kioxus 设计一套"安全、可预览、可逆"的迁移框架。
 
@@ -8,7 +8,7 @@
 
 ### Hermes 提供了什么
 
-Hermes（OpenClaw 的前身）有一个成熟的迁移系统：
+Hermes（AgentX 的前身）有一个成熟的迁移系统：
 
 ```
 HermesSource → MigrationPlan → MigrationApply
@@ -26,7 +26,7 @@ HermesSource → MigrationPlan → MigrationApply
 
 Kioxus 目前没有迁移系统。但有以下潜在需求：
 
-1. **从其他 Agent 系统迁移** - 比如从 OpenClaw 导入记忆
+1. **从其他 Agent 系统迁移** - 比如从 AgentX 导入记忆
 2. **备份与恢复** - 定期备份 Kioxus 状态，可恢复
 3. **多 workspace 支持** - 用户可能有多个 workspace
 4. **配置迁移** - 不同环境（dev/prod）的配置同步
@@ -49,7 +49,7 @@ Kioxus 目前没有迁移系统。但有以下潜在需求：
 
 ```typescript
 interface MigrationProvider {
-  id: string;                      // 唯一标识，如 "hermes", "openclaw", "kioxus-backup"
+  id: string;                      // 唯一标识，如 "hermes", "AgentX", "kioxus-backup"
   name: string;                    // 显示名称
   description: string;             // 说明
 
@@ -191,10 +191,10 @@ const migrationProviders = {
     // 用于恢复备份
   },
 
-  // 2. OpenClaw Provider (未来)
-  'openclaw': {
-    name: 'OpenClaw',
-    description: 'Import from OpenClaw workspace',
+  // 2. AgentX Provider (未来)
+  'AgentX': {
+    name: 'AgentX',
+    description: 'Import from AgentX workspace',
     // 发现 SOUL.md, MEMORY.md, USER.md, skills/
   },
 
@@ -207,15 +207,15 @@ const migrationProviders = {
 };
 ```
 
-### 3.2 OpenClaw 迁移（示例）
+### 3.2 AgentX 迁移（示例）
 
 ```typescript
-// 发现 OpenClaw workspace
-async function discoverOpenClawSource(input?: string): Promise<MigrationSource> {
-  const root = input || '~/.openclaw';
+// 发现 AgentX workspace
+async function discoverAgentXSource(input?: string): Promise<MigrationSource> {
+  const root = input || '~/.AgentX';
 
   return {
-    provider: 'openclaw',
+    provider: 'AgentX',
     root,
     files: [
       { path: 'SOUL.md', type: 'file' },
@@ -241,7 +241,7 @@ async function discoverOpenClawSource(input?: string): Promise<MigrationSource> 
 ### 3.3 计划生成
 
 ```typescript
-async function planOpenClawMigration(source: MigrationSource): Promise<MigrationPlan> {
+async function planAgentXMigration(source: MigrationSource): Promise<MigrationPlan> {
   const items: MigrationItem[] = [];
   const conflicts: ConflictItem[] = [];
   const warnings: WarningItem[] = [];
@@ -308,11 +308,11 @@ async function planOpenClawMigration(source: MigrationSource): Promise<Migration
   }
 
   return {
-    provider: 'openclaw',
+    provider: 'AgentX',
     items,
     conflicts,
     warnings,
-    secrets: [], // OpenClaw 源没有认证文件（假设）
+    secrets: [], // AgentX 源没有认证文件（假设）
   };
 }
 ```
@@ -456,7 +456,7 @@ class Kioxus {
   constructor() {
     // 注册内置迁移提供者
     this.migration.registerProvider(createKioxusBackupProvider());
-    this.migration.registerProvider(createOpenClawProvider());
+    this.migration.registerProvider(createAgentXProvider());
   }
 }
 ```
@@ -501,15 +501,15 @@ hooks.register(
 kioxus migrate list
 
 # 预览迁移计划
-kioxus migrate openclaw --dry-run
-kioxus migrate openclaw --from ~/.openclaw --dry-run
+kioxus migrate AgentX --dry-run
+kioxus migrate AgentX --from ~/.AgentX --dry-run
 
 # 执行迁移
-kioxus migrate apply openclaw --yes
-kioxus migrate apply openclaw --overwrite --yes
+kioxus migrate apply AgentX --yes
+kioxus migrate apply AgentX --overwrite --yes
 
 # 包含敏感信息
-kioxus migrate apply openclaw --include-secrets --yes
+kioxus migrate apply AgentX --include-secrets --yes
 
 # 回滚
 kioxus migrate rollback <backup-path>
@@ -524,9 +524,9 @@ kioxus backup restore <backup-id>
 
 ```bash
 # dry-run 输出示例
-$ kioxus migrate openclaw --dry-run
+$ kioxus migrate AgentX --dry-run
 
-Migration Plan: OpenClaw → Kioxus
+Migration Plan: AgentX → Kioxus
 ========================================
 
 Items to apply:
@@ -575,7 +575,7 @@ Run with --overwrite to resolve conflicts, or review manually.
 
 ### 7.3 后续扩展
 
-1. **v0.2** - 基本迁移框架 + OpenClaw provider
+1. **v0.2** - 基本迁移框架 + AgentX provider
 2. **v0.3** - Hermes provider + 回滚功能
 3. **v0.4** - 多 workspace 支持 + 备份调度
 

@@ -1,4 +1,4 @@
-{
+﻿{
   "version": 1,
   "tags": [
     {
@@ -162,7 +162,6 @@
       "merged_to": null
     },
     {
-      "name": "openclaw",
       "status": "pending",
       "created_at": 1784810114.2691429,
       "last_used": 1784810114.2691436,
