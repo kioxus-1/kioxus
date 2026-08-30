@@ -107,30 +107,18 @@ def create_app():
 
     @app.route("/api/config", methods=["GET"])
     def api_get_config():
-        """读取当前API配置"""
-        import json
-        cfg_path = Path(BASE_DIR).parent / "config" / "kioxus.json"
-        providers = {}
-        if cfg_path.exists():
-            with open(cfg_path, "r", encoding="utf-8") as f:
-                cfg = json.load(f)
-            for name, pcfg in cfg.get("providers", {}).items():
-                env_var = pcfg.get("api_key_env", "")
-                key = os.getenv(env_var, "")
-                masked = (key[:4] + "****" + key[-4:]) if len(key) > 8 else ""
-                providers[name] = {
-                    "api_url": pcfg.get("api_url", ""),
-                    "model": pcfg.get("model", ""),
-                    "api_key_env": env_var,
-                    "api_key_masked": masked,
-                    "has_key": bool(key),
-                }
-        return jsonify({"providers": providers, "base_dir": str(BASE_DIR)})
+        """读取当前Provider配置"""
+        from core_v2.provider_registry import get_registry
+        registry = get_registry()
+        return jsonify(registry.get_status())
 
     @app.route("/api/config", methods=["POST"])
     def api_save_config():
-        """保存API配置到.env和config/kioxus.json"""
-        import json
+        """保存Provider配置"""
+        from core_v2.provider_registry import get_registry, ProviderConfig as RegProviderConfig
+        from core_v2.config_watcher import validate_config
+        registry = get_registry()
+
         data = request.get_json()
         provider = data.get("provider", "").strip()
         api_url = data.get("api_url", "").strip()
@@ -146,7 +134,6 @@ def create_app():
         env_lines = []
         if env_path.exists():
             env_lines = env_path.read_text(encoding="utf-8").splitlines()
-        # 更新或添加
         found = False
         for i, line in enumerate(env_lines):
             if line.startswith(f"{env_var}="):
@@ -157,25 +144,27 @@ def create_app():
             env_lines.append(f"{env_var}={api_key}")
         env_path.write_text("\n".join(env_lines) + "\n", encoding="utf-8")
 
-        # 更新 config/kioxus.json
-        cfg_path = Path(BASE_DIR).parent / "config" / "kioxus.json"
-        cfg = {"providers": {}, "default_provider": provider}
-        if cfg_path.exists():
-            with open(cfg_path, "r", encoding="utf-8") as f:
-                cfg = json.load(f)
-        cfg["providers"][provider] = {
-            "api_url": api_url,
-            "api_key_env": env_var,
-            "model": model,
-            "max_tokens": 2048,
-            "temperature": 0.7,
-        }
-        cfg["default_provider"] = provider
-        with open(cfg_path, "w", encoding="utf-8") as f:
-            json.dump(cfg, f, indent=2, ensure_ascii=False)
-
-        # 重新加载LLM provider
         os.environ[env_var] = api_key
+
+        # 注册到ProviderRegistry
+        registry.register(RegProviderConfig(
+            name=provider,
+            api_url=api_url,
+            api_keys=[api_key],
+            model=model,
+            max_tokens=2048,
+            temperature=0.7,
+        ))
+        registry.set_default(provider)
+        cfg_path = str(Path(BASE_DIR).parent / "config" / "kioxus.json")
+        registry.save_to_config(cfg_path)
+
+        # 校验配置
+        is_valid, errors = validate_config(cfg_path)
+        if not is_valid:
+            return jsonify({"error": "配置校验失败", "details": errors}), 400
+
+        # 重新注册到LLM client
         llm.register_provider(ProviderConfig(
             name=provider,
             api_url=api_url,
@@ -187,6 +176,19 @@ def create_app():
         ))
 
         return jsonify({"ok": True, "provider": provider})
+
+    # 启动配置热更新
+    cfg_path = str(Path(BASE_DIR).parent / "config" / "kioxus.json")
+    from core_v2.config_watcher import ConfigWatcher
+    from core_v2.provider_registry import get_registry
+
+    def on_config_change(path):
+        registry = get_registry()
+        registry.load_from_config(path)
+        print(f"[ConfigWatcher] reloaded providers: {registry.list_providers()}")
+
+    watcher = ConfigWatcher(cfg_path, on_config_change)
+    watcher.start()
 
     return app
 

@@ -81,29 +81,24 @@ class Kioxus:
         self.decomposer = get_decomposer()
 
     def _setup_providers(self):
-        """从 config/kioxus.json 读取 provider 配置，用户可自由添加"""
-        import json
+        """从 ProviderRegistry 加载Provider配置"""
+        from core_v2.provider_registry import get_registry
+        registry = get_registry()
         config_path = os.path.join(self.base_dir, "config", "kioxus.json")
+        registry.load_from_config(config_path)
 
-        if not os.path.exists(config_path):
-            return
-
-        with open(config_path, "r", encoding="utf-8") as f:
-            cfg = json.load(f)
-
-        for name, pcfg in cfg.get("providers", {}).items():
-            api_key = os.getenv(pcfg.get("api_key_env", ""), "")
-            if not api_key:
-                continue
-            self.llm.register_provider(ProviderConfig(
-                name=name,
-                api_url=pcfg["api_url"],
-                api_key=api_key,
-                model=pcfg.get("model", ""),
-                role=ModelRole.DEFAULT,
-                max_tokens=pcfg.get("max_tokens", 2048),
-                temperature=pcfg.get("temperature", 0.7),
-            ))
+        for name in registry.list_providers():
+            pcfg = registry.get(name)
+            if pcfg and pcfg.api_key:
+                self.llm.register_provider(ProviderConfig(
+                    name=name,
+                    api_url=pcfg.api_url,
+                    api_key=pcfg.api_key,
+                    model=pcfg.model,
+                    role=ModelRole.DEFAULT,
+                    max_tokens=pcfg.max_tokens,
+                    temperature=pcfg.temperature,
+                ))
 
     def chat(self, message: str) -> str:
         """处理用户消息，返回回复"""
