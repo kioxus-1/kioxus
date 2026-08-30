@@ -7,6 +7,7 @@ dist/
 
 # Environment
 .env
+config/config.yaml
 
 # IDE
 .vscode/
@@ -26,3 +27,4 @@ build/
 data/sessions/
 data/memory_v2/
 data/memory_runtime/
+*.db
