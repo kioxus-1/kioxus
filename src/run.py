@@ -160,7 +160,7 @@ def main():
         if user_input == "/history":
             msgs = session_mgr.get_recent_messages(20)
             for m in msgs:
-                role = "你" if m["role"] == "user" else "甲辰"
+                role = "你" if m["role"] == "user" else "Kioxus"
                 print(f"  {role}: {m['content'][:100]}")
             continue
 
@@ -171,7 +171,7 @@ def main():
 
         # 处理消息
         response = engine.process(user_input)
-        print(f"\n甲辰: {response}")
+        print(f"\nKioxus: {response}")
 
     # 保存会话
     session_mgr.save_session()

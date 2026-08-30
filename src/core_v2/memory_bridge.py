@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 — 记忆桥接器
 连接 Engine 和 memory_v2 四层记忆系统
 
@@ -191,7 +191,7 @@ class MemoryBridge:
         # 构建对话摘要
         conversation = []
         for msg in recent_messages:
-            role = "用户" if msg.get("role") == "user" else "甲辰"
+            role = "用户" if msg.get("role") == "user" else "Kioxus"
             content = msg.get("content", "")[:100]
             conversation.append(f"{role}: {content}")
 

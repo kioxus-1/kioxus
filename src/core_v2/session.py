@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 — 会话管理
 对话历史、checkpoint、会话恢复
 """
@@ -99,7 +99,7 @@ class Session:
             return ""
         lines = []
         for t in self.turns:
-            role = "用户" if t.role == "user" else "甲辰"
+            role = "用户" if t.role == "user" else "Kioxus"
             lines.append(f"{role}: {t.content}")
         return "\n".join(lines)
 
