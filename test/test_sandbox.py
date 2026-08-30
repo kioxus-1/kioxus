@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 — 沙箱测试
 """
 
@@ -6,7 +6,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from core_v2.sandbox import (
+from core.sandbox import (
     Sandbox, SandboxLevel, SandboxPolicy, SandboxResult,
     CodeChecker, get_sandbox, reset_sandbox, sandbox_exec,
     PRESET_POLICIES,
@@ -136,7 +136,7 @@ def test_sandbox_convenience_function():
 
 def test_builtin_tools_code_exec():
     """测试builtin_tools的code_exec集成"""
-    from core_v2.builtin_tools import code_exec
+    from core.builtin_tools import code_exec
 
     # 沙箱模式（默认）
     result = code_exec("print('sandbox mode')")

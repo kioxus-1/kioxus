@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 Phase 3 — Smoke Test
 测试 tools + builtin_tools + decomposer
 """
@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_tool_registry():
     """测试工具注册表"""
-    from core_v2.tools import ToolRegistry, ToolMeta, ToolCategory, ToolResult
+    from core.tools import ToolRegistry, ToolMeta, ToolCategory, ToolResult
 
     reg = ToolRegistry()
 
@@ -50,7 +50,7 @@ def test_tool_registry():
 
 def test_builtin_tools():
     """测试内置工具"""
-    from core_v2.builtin_tools import http_fetch, file_read, file_write, file_list, code_exec
+    from core.builtin_tools import http_fetch, file_read, file_write, file_list, code_exec
     import tempfile
     from pathlib import Path
 
@@ -92,7 +92,7 @@ def test_builtin_tools():
 
 def test_decomposer():
     """测试目标分解器"""
-    from core_v2.decomposer import GoalDecomposer, DecomposeStrategy
+    from core.decomposer import GoalDecomposer, DecomposeStrategy
 
     decomposer = GoalDecomposer()  # 无LLM
 
@@ -126,8 +126,8 @@ def test_decomposer():
 
 def test_engine_integration():
     """测试引擎集成（Phase 3）"""
-    from core_v2.engine import Engine, EngineState, reset_engine
-    from core_v2 import reset_llm_client, reset_tool_registry, reset_decomposer
+    from core.engine import Engine, EngineState, reset_engine
+    from core import reset_llm_client, reset_tool_registry, reset_decomposer
 
     reset_engine()
     reset_llm_client()

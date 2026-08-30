@@ -16,17 +16,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 
 # Test files in order
 TESTS = [
-    'tests/test_core_v2_smoke.py',
+    'tests/test_core_smoke.py',
     'tests/test_phase2_smoke.py',
     'tests/test_phase3_smoke.py',
     'tests/test_verifier.py',
     'tests/test_sandbox.py',
     'tests/test_context_budget.py',
-    'tests/test_memory_v2.py',
+    'tests/test_memory.py',
 ]
 
 QUICK_TESTS = [
-    'tests/test_core_v2_smoke.py',
+    'tests/test_core_smoke.py',
     'tests/test_verifier.py',
 ]
 

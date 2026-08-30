@@ -14,7 +14,7 @@ if getattr(sys, 'frozen', False):
     BASE_DIR = os.path.dirname(sys.executable)
     sys.path.insert(0, BASE_DIR)
 else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 logging.getLogger('werkzeug').setLevel(logging.WARNING)
 
@@ -36,12 +36,12 @@ def create_app():
     load_dotenv(Path(BASE_DIR) / ".env")
 
     from flask import Flask, request, jsonify, render_template_string
-    from core_v2 import (
+    from core import (
         Engine, LLMClient, get_llm_client,
         ProviderConfig, ModelRole,
         SessionManager, get_session_manager,
     )
-    from memory_v2 import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
+    from memory import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
 
     app = Flask(__name__)
     llm = get_llm_client()
@@ -108,15 +108,15 @@ def create_app():
     @app.route("/api/config", methods=["GET"])
     def api_get_config():
         """读取当前Provider配置"""
-        from core_v2.provider_registry import get_registry
+        from core.provider_registry import get_registry
         registry = get_registry()
         return jsonify(registry.get_status())
 
     @app.route("/api/config", methods=["POST"])
     def api_save_config():
         """保存Provider配置"""
-        from core_v2.provider_registry import get_registry, ProviderConfig as RegProviderConfig
-        from core_v2.config_watcher import validate_config
+        from core.provider_registry import get_registry, ProviderConfig as RegProviderConfig
+        from core.config_watcher import validate_config
         registry = get_registry()
 
         data = request.get_json()
@@ -179,8 +179,8 @@ def create_app():
 
     # 启动配置热更新
     cfg_path = str(Path(BASE_DIR).parent / "config" / "kioxus.json")
-    from core_v2.config_watcher import ConfigWatcher
-    from core_v2.provider_registry import get_registry
+    from core.config_watcher import ConfigWatcher
+    from core.provider_registry import get_registry
 
     def on_config_change(path):
         registry = get_registry()

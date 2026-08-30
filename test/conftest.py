@@ -1,4 +1,4 @@
-"""pytest conftest — 将 src/ 加入 sys.path"""
+﻿"""pytest conftest — 将 src/ 加入 sys.path"""
 import sys
 import os
 

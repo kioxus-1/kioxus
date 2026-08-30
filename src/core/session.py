@@ -260,7 +260,7 @@ class SessionManager:
         # 读取现有 today.md 内容
         if today_path is None:
             # storage_dir = data/sessions, 上两级到 kioxus根目录
-            today_path = self.storage_dir.parent.parent / "memory_v2" / "data" / "short-term" / "today.md"
+            today_path = self.storage_dir.parent.parent / "memory" / "data" / "short-term" / "today.md"
 
         existing = ""
         if today_path.exists():

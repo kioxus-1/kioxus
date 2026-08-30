@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Memory System v2 — LLM 压缩操作
 Flush Agent、旬记压缩、反思压缩
 代码管逻辑，LLM管语义
@@ -98,11 +98,11 @@ LLMCallFunc = Callable[[List[Dict], str], str]  # (messages, model) -> response
 
 def default_llm_call(messages: List[Dict], model: str = "default") -> str:
     """
-    默认LLM调用 — 使用 core_v2 的 LLMClient
+    默认LLM调用 — 使用 core 的 LLMClient
     如果不可用，返回None
     """
     try:
-        from core_v2 import get_llm_client, LLMMessage
+        from core import get_llm_client, LLMMessage
         client = get_llm_client()
         llm_messages = [LLMMessage(role=m.get('role', 'user'), content=m.get('content', '')) for m in messages]
         response = client.chat(llm_messages)

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 — Verifier 测试
 """
 
@@ -6,7 +6,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from core_v2.verifier import (
+from core.verifier import (
     Verifier, Verdict, VerificationResult,
     OutputFormatCheck, ToolResultCheck, RelevanceCheck, SafetyCheck, ConsistencyCheck,
     get_verifier, reset_verifier,

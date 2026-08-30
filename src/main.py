@@ -2,7 +2,7 @@
 Kioxus Main Entry Point
 Multi-agent framework with adversarial verification
 
-v0.3.0 — core_v2 architecture
+v0.3.0 — core architecture
 Three principles: Adversarial Verification, Hard Boundary Isolation, Quantifiable Context
 """
 
@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from pathlib import Path
 from dotenv import load_dotenv
 
-from core_v2 import (
+from core import (
     Engine, get_engine, reset_engine, EngineState,
     LLMClient, get_llm_client, reset_llm_client,
     ProviderConfig, ModelRole,
@@ -25,7 +25,7 @@ from core_v2 import (
     Sandbox, get_sandbox, SandboxLevel,
     GoalDecomposer, get_decomposer,
 )
-from memory_v2 import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
+from memory import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
 
 
 __version__ = "0.3.0"
@@ -34,7 +34,7 @@ __all__ = ["Kioxus", "create_kioxus"]
 
 class Kioxus:
     """
-    Kioxus 主系统 — core_v2 架构
+    Kioxus 主系统 — core 架构
 
     三大原则：
     1. 对抗性验证 — Verifier独立审查输出
@@ -82,7 +82,7 @@ class Kioxus:
 
     def _setup_providers(self):
         """从 ProviderRegistry 加载Provider配置"""
-        from core_v2.provider_registry import get_registry
+        from core.provider_registry import get_registry
         registry = get_registry()
         config_path = os.path.join(self.base_dir, "config", "kioxus.json")
         registry.load_from_config(config_path)

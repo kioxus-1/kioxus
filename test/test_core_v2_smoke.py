@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 — Smoke Test
 验证所有模块能跑通
 """
@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_input():
     """测试输入处理"""
-    from core_v2.input import InputProcessor
+    from core.input import InputProcessor
 
     proc = InputProcessor()
 
@@ -40,7 +40,7 @@ def test_input():
 def test_session():
     """测试会话管理"""
     import tempfile
-    from core_v2.session import SessionManager
+    from core.session import SessionManager
 
     with tempfile.TemporaryDirectory() as tmpdir:
         mgr = SessionManager(storage_dir=__import__("pathlib").Path(tmpdir))
@@ -83,7 +83,7 @@ def test_session():
 
 def test_context():
     """测试上下文组装"""
-    from core_v2.context import ContextBuilder, ContextBudget
+    from core.context import ContextBuilder, ContextBudget
 
     builder = ContextBuilder()
 
@@ -100,7 +100,7 @@ def test_context():
 
 def test_output():
     """测试输出处理"""
-    from core_v2.output import OutputHandler, Observation
+    from core.output import OutputHandler, Observation
 
     handler = OutputHandler()
 
@@ -125,7 +125,7 @@ def test_output():
 
 def test_llm():
     """测试LLM客户端"""
-    from core_v2.llm import LLMClient, LLMMessage, ModelRole
+    from core.llm import LLMClient, LLMMessage, ModelRole
 
     client = LLMClient()
     client.register_mock()
@@ -149,7 +149,7 @@ def test_llm():
 
 def test_engine():
     """测试核心引擎（Mock模式）"""
-    from core_v2.engine import Engine, EngineState
+    from core.engine import Engine, EngineState
 
     engine = Engine()
     engine.llm.register_mock()

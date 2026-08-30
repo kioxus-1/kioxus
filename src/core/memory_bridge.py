@@ -1,6 +1,6 @@
 ﻿"""
 Kioxus Core v2 — 记忆桥接器
-连接 Engine 和 memory_v2 四层记忆系统
+连接 Engine 和 memory 四层记忆系统
 
 职责：
   读：通过 MemoryRouter 注入上下文（已在 ContextBuilder 中完成）
@@ -24,11 +24,11 @@ def _get_save_memory():
     global _save_memory
     if _save_memory is None:
         try:
-            from memory_v2 import save_memory
+            from memory import save_memory
             _save_memory = save_memory
         except ImportError:
-            logger.warning("memory_v2 not available")
-            _save_memory = lambda **kwargs: {"success": False, "errors": ["memory_v2 not available"]}
+            logger.warning("memory not available")
+            _save_memory = lambda **kwargs: {"success": False, "errors": ["memory not available"]}
     return _save_memory
 
 
@@ -72,7 +72,7 @@ class MemoryBridge:
         if layer == "core":
             try:
                 from pathlib import Path
-                core_path = Path(__file__).parent.parent / "memory_v2" / "data" / "core.md"
+                core_path = Path(__file__).parent.parent / "memory" / "data" / "core.md"
                 if core_path.exists():
                     existing = core_path.read_text(encoding="utf-8")
                     # 提取所有 [事实] 行

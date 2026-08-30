@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 Phase 2 — Smoke Test
 测试 reasoning + planner
 """
@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def test_reasoning():
     """测试推理引擎"""
-    from core_v2.reasoning import ReasoningEngine, ReasoningMode
+    from core.reasoning import ReasoningEngine, ReasoningMode
 
     engine = ReasoningEngine()  # 无LLM
 
@@ -30,7 +30,7 @@ def test_reasoning():
 
 def test_planner():
     """测试规划器"""
-    from core_v2.planner import Planner, Complexity
+    from core.planner import Planner, Complexity
 
     planner = Planner()  # 无LLM
 
@@ -62,7 +62,7 @@ def test_planner():
 
 def test_engine_integration():
     """测试引擎集成"""
-    from core_v2.engine import Engine, EngineState
+    from core.engine import Engine, EngineState
 
     engine = Engine()
     engine.llm.register_mock()

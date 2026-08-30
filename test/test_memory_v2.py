@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Memory v2 — 核心模块测试
 测试 memory.py, search.py, tags.py, router.py
 """
@@ -11,10 +11,10 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from memory_v2.tags import TagDictionary, TagEntry, TagStatus
-from memory_v2.memory import MemoryStore, MemoryEntry, parse_frontmatter, build_frontmatter
-from memory_v2.search import SimpleBM25, MemorySearch, extract_keywords_simple
-from memory_v2.router import MemoryRouter, estimate_tokens
+from memory.tags import TagDictionary, TagEntry, TagStatus
+from memory.memory import MemoryStore, MemoryEntry, parse_frontmatter, build_frontmatter
+from memory.search import SimpleBM25, MemorySearch, extract_keywords_simple
+from memory.router import MemoryRouter, estimate_tokens
 
 
 # ============== 临时目录 fixture ==============

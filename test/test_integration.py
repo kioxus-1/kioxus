@@ -1,5 +1,5 @@
-"""
-集成测试 — 真实LLM + memory_v2
+﻿"""
+集成测试 — 真实LLM + memory
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -8,8 +8,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / ".env")
 
-from core_v2 import Engine, get_llm_client, ProviderConfig, ModelRole, SessionManager, LLMMessage
-from memory_v2 import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
+from core import Engine, get_llm_client, ProviderConfig, ModelRole, SessionManager, LLMMessage
+from memory import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
 
 
 def test_real_llm():
@@ -39,8 +39,8 @@ def test_real_llm():
     print("PASS test_real_llm")
 
 
-def test_memory_v2():
-    """测试memory_v2集成"""
+def test_memory():
+    """测试memory集成"""
     store = get_memory_store()
     tags = get_tag_dictionary()
     search = get_search()
@@ -53,12 +53,12 @@ def test_memory_v2():
         print(f"[Memory] preview: {ctx['context'][:300]}...")
     else:
         print("[Memory] no context (empty memory store)")
-    print("PASS test_memory_v2")
+    print("PASS test_memory")
 
 
 def test_engine_full():
-    """测试完整引擎：真实LLM + memory_v2"""
-    from core_v2 import reset_engine, reset_llm_client
+    """测试完整引擎：真实LLM + memory"""
+    from core import reset_engine, reset_llm_client
 
     # 重置单例
     reset_engine()
@@ -103,10 +103,10 @@ def test_engine_full():
 
 if __name__ == "__main__":
     print("=" * 50)
-    print("  集成测试 — 真实LLM + memory_v2")
+    print("  集成测试 — 真实LLM + memory")
     print("=" * 50)
 
-    tests = [test_real_llm, test_memory_v2, test_engine_full]
+    tests = [test_real_llm, test_memory, test_engine_full]
     passed = 0
     failed = 0
 

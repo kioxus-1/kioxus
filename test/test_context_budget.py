@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 — Context预算硬限制测试
 """
 
@@ -6,7 +6,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from core_v2.context import (
+from core.context import (
     ContextBudget, ContextTracker, ContextBuilder,
     ContextBudgetExceeded, estimate_tokens,
 )

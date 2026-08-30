@@ -14,7 +14,7 @@ import shutil
 import argparse
 
 # 项目根目录
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIST_DIR = os.path.join(BASE_DIR, "dist")
 BUILD_DIR = os.path.join(BASE_DIR, "build")
 
@@ -73,27 +73,27 @@ def build(onefile=False):
 
     # 需要导入的隐藏模块
     hidden_imports = [
-        "core_v2",
-        "core_v2.engine",
-        "core_v2.input",
-        "core_v2.llm",
-        "core_v2.context",
-        "core_v2.output",
-        "core_v2.session",
-        "core_v2.memory_bridge",
-        "core_v2.reasoning",
-        "core_v2.planner",
-        "core_v2.tools",
-        "core_v2.builtin_tools",
-        "core_v2.decomposer",
-        "core_v2.verifier",
-        "memory_v2",
-        "memory_v2.memory",
-        "memory_v2.router",
-        "memory_v2.search",
-        "memory_v2.tags",
-        "memory_v2.compressor",
-        "memory_v2.janitor",
+        "core",
+        "core.engine",
+        "core.input",
+        "core.llm",
+        "core.context",
+        "core.output",
+        "core.session",
+        "core.memory_bridge",
+        "core.reasoning",
+        "core.planner",
+        "core.tools",
+        "core.builtin_tools",
+        "core.decomposer",
+        "core.verifier",
+        "memory",
+        "memory.memory",
+        "memory.router",
+        "memory.search",
+        "memory.tags",
+        "memory.compressor",
+        "memory.janitor",
         "flask",
         "flask.json",
         "werkzeug",

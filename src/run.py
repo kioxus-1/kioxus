@@ -17,13 +17,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from pathlib import Path
 from dotenv import load_dotenv
 
-from core_v2 import (
+from core import (
     Engine, get_engine,
     LLMClient, get_llm_client,
     ProviderConfig, ModelRole,
     SessionManager, get_session_manager,
 )
-from memory_v2 import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
+from memory import get_memory_store, get_search, get_tag_dictionary, MemoryRouter
 
 
 def load_env():
@@ -124,7 +124,7 @@ def main():
     tags = get_tag_dictionary()
     search = get_search()
     memory_router = MemoryRouter(store, search, tags)
-    print(f"[Memory] 已接入 memory_v2")
+    print(f"[Memory] 已接入 memory")
 
     # 5. 创建引擎
     engine = Engine(
