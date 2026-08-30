@@ -105,6 +105,89 @@ def create_app():
         session_mgr.save_session()
         return jsonify({"ok": True})
 
+    @app.route("/api/config", methods=["GET"])
+    def api_get_config():
+        """读取当前API配置"""
+        import json
+        cfg_path = Path(BASE_DIR).parent / "config" / "kioxus.json"
+        providers = {}
+        if cfg_path.exists():
+            with open(cfg_path, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+            for name, pcfg in cfg.get("providers", {}).items():
+                env_var = pcfg.get("api_key_env", "")
+                key = os.getenv(env_var, "")
+                masked = (key[:4] + "****" + key[-4:]) if len(key) > 8 else ""
+                providers[name] = {
+                    "api_url": pcfg.get("api_url", ""),
+                    "model": pcfg.get("model", ""),
+                    "api_key_env": env_var,
+                    "api_key_masked": masked,
+                    "has_key": bool(key),
+                }
+        return jsonify({"providers": providers, "base_dir": str(BASE_DIR)})
+
+    @app.route("/api/config", methods=["POST"])
+    def api_save_config():
+        """保存API配置到.env和config/kioxus.json"""
+        import json
+        data = request.get_json()
+        provider = data.get("provider", "").strip()
+        api_url = data.get("api_url", "").strip()
+        api_key = data.get("api_key", "").strip()
+        model = data.get("model", "").strip()
+
+        if not all([provider, api_url, api_key, model]):
+            return jsonify({"error": "所有字段都必填"}), 400
+
+        # 保存到 .env
+        env_path = Path(BASE_DIR).parent / ".env"
+        env_var = f"{provider.upper()}_API_KEY"
+        env_lines = []
+        if env_path.exists():
+            env_lines = env_path.read_text(encoding="utf-8").splitlines()
+        # 更新或添加
+        found = False
+        for i, line in enumerate(env_lines):
+            if line.startswith(f"{env_var}="):
+                env_lines[i] = f"{env_var}={api_key}"
+                found = True
+                break
+        if not found:
+            env_lines.append(f"{env_var}={api_key}")
+        env_path.write_text("\n".join(env_lines) + "\n", encoding="utf-8")
+
+        # 更新 config/kioxus.json
+        cfg_path = Path(BASE_DIR).parent / "config" / "kioxus.json"
+        cfg = {"providers": {}, "default_provider": provider}
+        if cfg_path.exists():
+            with open(cfg_path, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+        cfg["providers"][provider] = {
+            "api_url": api_url,
+            "api_key_env": env_var,
+            "model": model,
+            "max_tokens": 2048,
+            "temperature": 0.7,
+        }
+        cfg["default_provider"] = provider
+        with open(cfg_path, "w", encoding="utf-8") as f:
+            json.dump(cfg, f, indent=2, ensure_ascii=False)
+
+        # 重新加载LLM provider
+        os.environ[env_var] = api_key
+        llm.register_provider(ProviderConfig(
+            name=provider,
+            api_url=api_url,
+            api_key=api_key,
+            model=model,
+            role=ModelRole.DEFAULT,
+            max_tokens=2048,
+            temperature=0.7,
+        ))
+
+        return jsonify({"ok": True, "provider": provider})
+
     return app
 
 
@@ -342,6 +425,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
       </div>
       <div class="sp-divider"></div>
       <div class="sp-group">
+        <div class="sp-label">LLM 配置</div>
+        <div class="sp-hint" style="margin-bottom:12px">配置API密钥后即可使用，支持任意OpenAI兼容API</div>
+        <div class="sp-row"><label>Provider</label><input type="text" id="cfg-provider" placeholder="如 xiaomi / openai / custom" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;"></div>
+        <div class="sp-row"><label>API URL</label><input type="text" id="cfg-url" placeholder="https://api.openai.com/v1/chat/completions" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;"></div>
+        <div class="sp-row"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-..." style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;"></div>
+        <div class="sp-row"><label>Model</label><input type="text" id="cfg-model" placeholder="gpt-4o" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;"></div>
+        <div class="sp-row"><button class="sp-btn" onclick="saveConfig()" style="background:var(--accent);color:#fff;border-color:var(--accent)">保存配置</button><button class="sp-btn" onclick="testConfig()">测试连接</button></div>
+        <div class="sp-hint" id="cfg-status"></div>
+      </div>
+      <div class="sp-divider"></div>
+      <div class="sp-group">
         <div class="sp-label">数据</div>
         <div class="sp-row"><button class="sp-btn danger" onclick="clearChat()">清空对话记录</button></div>
       </div>
@@ -408,6 +502,52 @@ function setFontSize(f){localStorage.setItem('kx_fontsize',f);applyFontSize(f);d
 function openSettings(){$('#settings-overlay').classList.add('show')}
 function closeSettings(){$('#settings-overlay').classList.remove('show')}
 function showToast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+
+// ===== API配置 =====
+async function loadConfig(){
+  try{
+    const r=await fetch('/api/config');
+    const d=await r.json();
+    const ps=d.providers||{};
+    const names=Object.keys(ps);
+    if(names.length>0){
+      const first=names[0];
+      const p=ps[first];
+      $('#cfg-provider').value=first;
+      $('#cfg-url').value=p.api_url||'';
+      $('#cfg-model').value=p.model||'';
+      if(p.has_key)$('#cfg-status').textContent='已配置: '+first+' ('+p.api_key_masked+')';
+    }
+  }catch(e){}
+}
+
+async function saveConfig(){
+  const provider=$('#cfg-provider').value.trim();
+  const url=$('#cfg-url').value.trim();
+  const key=$('#cfg-key').value.trim();
+  const model=$('#cfg-model').value.trim();
+  if(!provider||!url||!key||!model){showToast('请填写所有字段');return}
+  try{
+    const r=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider,api_url:url,api_key:key,model})});
+    const d=await r.json();
+    if(d.ok){showToast('配置已保存');$('#cfg-key').value='';loadConfig()}
+    else showToast('错误: '+(d.error||'未知'))
+  }catch(e){showToast('保存失败: '+e.message)}
+}
+
+async function testConfig(){
+  const status=$('#cfg-status');
+  status.textContent='测试中...';
+  try{
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'你好，请回复OK'})});
+    const d=await r.json();
+    if(d.error){status.textContent='连接失败: '+d.error;status.style.color='var(--red)'}
+    else{status.textContent='连接成功! 回复: '+d.reply.substring(0,50);status.style.color='var(--accent)'}
+  }catch(e){status.textContent='网络错误: '+e.message;status.style.color='var(--red)'}
+}
+
+// 打开设置时加载配置
+function openSettings(){loadConfig();$('#settings-overlay').classList.add('show')}
 async function clearChat(){if(!confirm('确定清空？'))return;try{await fetch('/api/clear',{method:'POST'});msgWrap.innerHTML='<div class="welcome" id="welcome"><div class="logo-big"><img src="data:image/png;base64,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" style="width:60px;height:60px;border-radius:16px;"></div><h2>Kioxus</h2><p>输入消息开始对话</p></div>';welcomeShown=true;turns=0;$('#st-turns').textContent='0 轮';showToast('已清空')}catch(e){showToast('失败')}}
 
 // ===== 消息 =====
