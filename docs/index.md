@@ -1,69 +1,260 @@
 # Kioxus 文档
 
-> Kioxus — 轻量、可拓展的自主Agent框架
+> Kioxus — 一个能自己思考、记忆、验证的AI助手
 
 ---
 
 ## 目录
 
-### 快速开始
-- [简介](#简介)
-- [安装](#安装)
-- [快速开始](#快速开始)
+### 第一部分：AI基础知识
+- [什么是AI](#什么是ai)
+- [什么是大语言模型llm](#什么是大语言模型llm)
+- [什么是api和api-key](#什么是api和api-key)
+- [什么是agent](#什么是agent)
+- [什么是token](#什么是token)
+- [什么是推理](#什么是推理)
+- [什么是记忆](#什么是记忆)
+- [什么是沙箱](#什么是沙箱)
+- [什么是验证](#什么是验证)
 
-### 核心概念
-- [架构总览](#架构总览)
-- [核心循环](#核心循环)
-- [三大原则](#三大原则)
-- [记忆系统](#记忆系统)
+### 第二部分：认识Kioxus
+- [Kioxus是什么](#kioxus是什么)
+- [Kioxus能做什么](#kioxus能做什么)
+- [Kioxus怎么工作的](#kioxus怎么工作的)
 
-### 使用指南
-- [用户使用](#用户使用exe)
+### 第三部分：使用教程
+- [下载和安装](#下载和安装)
+- [配置api-key](#配置api-key)
+- [开始对话](#开始对话)
+- [高级设置](#高级设置)
+
+### 第四部分：进阶内容
 - [开发者模式](#开发者模式)
-- [配置说明](#配置说明)
-- [LLM Provider](#llm-provider)
-
-### API 参考
-- [核心引擎模块](#核心引擎模块)
-- [记忆系统模块](#记忆系统模块)
-- [内置工具](#内置工具)
-
-### 部署
-- [打包成exe](#打包成exe)
-- [Docker部署](#docker部署)
-
-### 参考
+- [配置文件说明](#配置文件说明)
+- [llm-provider配置](#llm-provider配置)
+- [核心模块说明](#核心模块说明)
 - [测试](#测试)
+- [打包和部署](#打包和部署)
+
+### 第五部分：参考
 - [版本历史](#版本历史)
-- [FAQ](#faq)
+- [faq](#faq)
 
 ---
 
-## 简介
+# 第一部分：AI基础知识
 
-Kioxus 是一套开箱即用的自主Agent解决方案，能独立思考、记忆、验证自己的输出。
+## 什么是AI
 
-**核心能力**：
-- 🗣️ 自然语言对话，支持多轮上下文和记忆
-- 🧠 链式推理引擎（直接推理/链式推理/反思）
-- 🔧 内置工具：网页抓取、文件读写、代码执行、网页搜索
-- ✅ 输出验证器，自动检查格式、相关性、安全性、一致性
-- 🔒 代码执行沙箱，4级安全策略，进程级隔离
-- 📊 Token预算追踪，支持软限制和硬限制
-- 🔄 多Key轮换 + Model Failover，API调用高可用
+AI（Artificial Intelligence，人工智能）是让计算机像人一样思考和回答问题的技术。
 
-**适用场景**：
-- 对话助手 / 自动化任务 / 代码执行 / 数据处理
+你平时用的Siri、小爱同学、ChatGPT，都是AI。它们能听懂你说的话，然后给你回答。
+
+**关键点**：AI不是真的有"智能"，它是通过大量数据训练出来的程序。它看起来像在思考，其实是在根据学到的规律生成回答。
 
 ---
 
-## 安装
+## 什么是大语言模型（LLM）
 
-### 方式一：下载exe（推荐）
+LLM（Large Language Model，大语言模型）是AI的一种，专门用来理解和生成文字。
 
-前往 [Releases](https://github.com/kioxus-1/kioxus/releases) 下载最新版，解压双击即用。
+**通俗理解**：LLM读过互联网上几乎所有的文字（书、文章、网页），所以它"知道"很多事情。你问它问题，它根据读过的内容来回答。
 
-### 方式二：从源码安装
+**常见的LLM服务**：
+
+| 名称 | 公司 | 说明 |
+|------|------|------|
+| ChatGPT | OpenAI | 最知名的AI对话服务 |
+| Claude | Anthropic | 另一个知名的AI对话服务 |
+| MiMo | 小米 | 小米公司的AI模型 |
+| MiniMax | MiniMax公司 | 国产AI模型 |
+| DeepSeek | DeepSeek公司 | 国产AI模型 |
+
+**关键点**：LLM不是万能的。它可能回答错误，也可能编造不存在的信息。所以Kioxus有"验证器"来检查它的回答。
+
+---
+
+## 什么是API和API Key
+
+### API
+
+API（Application Programming Interface，应用程序编程接口）是程序之间对话的方式。
+
+**通俗理解**：你去餐厅点菜，服务员把你的需求告诉厨房，厨房做好菜再通过服务员端给你。API就是这个"服务员"——你的程序通过API把请求发给AI服务，AI服务通过API把回答返回来。
+
+### API Key
+
+API Key（API密钥）是你使用AI服务的"通行证"。
+
+**通俗理解**：就像你去游泳馆需要办一张会员卡，卡上有卡号和密码。API Key就是你的卡号+密码，没有它你就用不了AI服务。
+
+**怎么获取API Key**：
+1. 去AI服务商的网站注册账号（比如小米MiMo、OpenAI）
+2. 在账号设置里找到"API Key"或"密钥"选项
+3. 点击"生成"或"创建"
+4. 复制生成的密钥（一串字母和数字的组合）
+
+**重要**：API Key是私密的，不要告诉别人，不要上传到公开的地方。
+
+---
+
+## 什么是Agent
+
+Agent（智能体）是一个能自主完成任务的AI程序。
+
+**通俗理解**：普通的AI对话工具（比如ChatGPT网页版）只能你问一句它答一句。Agent更进一步——它能自己思考、做计划、使用工具、检查结果。
+
+**Agent和普通AI的区别**：
+
+| | 普通AI对话 | Agent |
+|---|----------|-------|
+| 工作方式 | 你问一句，它答一句 | 它能自己思考、做计划、执行 |
+| 能用工具吗 | 不能 | 能（搜索网页、读写文件、执行代码） |
+| 能记住吗 | 有限 | 有专门的记忆系统 |
+| 会检查自己吗 | 不会 | 有验证器检查回答是否靠谱 |
+
+**Kioxus就是一个Agent**。它不只是和你聊天，还能帮你做事情。
+
+---
+
+## 什么是Token
+
+Token是AI处理文字的最小单位。
+
+**通俗理解**：AI不是按"字"或"词"来读文字的，它把文字拆成一个个小片段，这些小片段就是Token。
+
+**举例**：
+- "你好" 可能是 2个Token
+- "Hello world" 可能是 2个Token（Hello 和 world）
+- 一段100字的中文，大约是 50-100个Token
+
+**为什么要关心Token**：
+- AI服务按Token数量收费
+- 每次对话有Token上限（比如最多4096个Token）
+- Kioxus会追踪Token使用量，防止超出预算
+
+---
+
+## 什么是推理
+
+推理是AI思考问题的过程。
+
+**通俗理解**：就像你做数学题时会一步步推导，AI也会一步步推理。比如：
+- 你问："北京今天天气怎么样？"
+- AI推理：需要先查天气数据 → 搜索"北京今天天气" → 找到结果 → 告诉你
+
+**Kioxus的三种推理模式**：
+- **直接推理**：直接给出答案（简单问题用）
+- **链式推理**：一步步推导（复杂问题用）
+- **反思**：检查自己的答案对不对再回答
+
+---
+
+## 什么是记忆
+
+记忆是AI记住之前对话内容的能力。
+
+**通俗理解**：就像你和朋友聊天，朋友记得你之前说过的话。AI的记忆系统也是一样——它能记住你之前告诉它的事情，下次对话还能想起来。
+
+**Kioxus的四层记忆**：
+
+| 层 | 存什么 | 举例 |
+|---|--------|------|
+| 核心层 | 身份、价值观、规则 | "我是Kioxus，一个AI助手" |
+| 反思层 | 教训、认知 | "用户喜欢简洁的回答" |
+| 记录层 | 对话历史 | "昨天用户问了Python的问题" |
+| 今日层 | 今天的内容 | "今天用户在调试代码" |
+
+---
+
+## 什么是沙箱
+
+沙箱是一个隔离的安全环境，程序在里面运行时不能影响外面。
+
+**通俗理解**：就像小朋友在沙箱里玩沙子，沙子不会弄到外面。程序在沙箱里运行时，即使出了问题，也不会影响你的电脑。
+
+**Kioxus的沙箱有4个安全级别**：
+
+| 级别 | 说明 | 适合场景 |
+|------|------|----------|
+| STRICT（严格） | 不能联网，5秒超时，内存128MB | 不信任的代码 |
+| NORMAL（普通） | 不能联网，10秒超时，内存256MB | 一般代码 |
+| RELAXED（宽松） | 可以联网，30秒超时，内存512MB | 需要联网的代码 |
+| UNSAFE（不安全） | 没有限制 | 完全信任的代码 |
+
+---
+
+## 什么是验证
+
+验证是检查AI的回答是否正确、安全的过程。
+
+**通俗理解**：就像老师批改作业，检查答案对不对、有没有抄袭、格式对不对。Kioxus的验证器也是这样——它会自动检查AI的回答。
+
+**Kioxus验证器检查5项**：
+1. **格式检查**：回答是否完整、有没有空白
+2. **工具检查**：工具调用是否成功
+3. **相关性**：回答是否和问题相关
+4. **安全性**：有没有泄露密码、密钥等敏感信息
+5. **一致性**：回答有没有自相矛盾
+
+如果检查不通过，Kioxus会自动重试（最多2次）。
+
+---
+
+# 第二部分：认识Kioxus
+
+## Kioxus是什么
+
+Kioxus是一个自主Agent——一个能自己思考、记忆、使用工具、验证回答的AI助手。
+
+你可以把它理解为一个"本地版的ChatGPT"，但它：
+- 能帮你执行代码
+- 能记住你说过的话
+- 能检查自己的回答是否正确
+- 你的数据不会上传到别人的服务器
+
+---
+
+## Kioxus能做什么
+
+1. **对话**：和你聊天，回答问题
+2. **思考**：遇到复杂问题会一步步推理
+3. **记忆**：记住你之前说过的话
+4. **工具**：搜索网页、读写文件、执行代码
+5. **验证**：检查自己的回答是否靠谱
+6. **安全**：代码在沙箱里运行，不会搞坏你的电脑
+
+---
+
+## Kioxus怎么工作的
+
+每次你发一条消息，Kioxus会经过8个步骤：
+
+1. **理解你的消息**（Input）
+2. **回忆相关记忆**（Memory）
+3. **思考怎么回答**（Think）
+4. **制定计划**（Plan）
+5. **执行动作**（Act）——调用AI生成回答，或者使用工具
+6. **观察结果**（Observe）
+7. **验证回答**（Verify）——检查回答是否正确
+8. **保存记忆**（Reflect）——如果有值得记住的就存起来
+
+---
+
+# 第三部分：使用教程
+
+## 下载和安装
+
+### 方式一：下载exe（推荐普通用户）
+
+1. 打开 https://github.com/kioxus-1/kioxus/releases
+2. 找到最新版本，点击 `Kioxus.exe` 下载
+3. 解压下载的文件
+4. 双击 `Kioxus.exe` 运行
+
+不需要安装Python，不需要任何开发环境。
+
+### 方式二：从源码安装（适合开发者）
 
 ```bash
 git clone https://github.com/kioxus-1/kioxus.git
@@ -71,170 +262,98 @@ cd kioxus
 pip install -r requirements.txt
 ```
 
-### 依赖
-
-- Python 3.11+
-- Flask
-- PyWebView（桌面窗口）
-- pytest（测试）
-
 ---
 
-## 快速开始
+## 配置API Key
 
-### 用户（exe）
+### 第一步：获取API Key
 
-1. 下载 `Kioxus.exe`
-2. 双击运行
-3. 点击左侧 **设置**
-4. 填写 Provider、API URL、API Key、Model
-5. 点击 **保存配置** → **测试连接**
-6. 开始对话
+你需要一个AI服务的API Key。以下是一些常见的AI服务：
 
-### 开发者（命令行）
+| 服务 | 网站 | 说明 |
+|------|------|------|
+| 小米MiMo | https://xiaomimimo.com | 国产AI服务 |
+| MiniMax | https://minimax.chat | 国产AI服务 |
+| OpenAI | https://platform.openai.com | ChatGPT的API服务 |
+| DeepSeek | https://platform.deepseek.com | 国产AI服务 |
 
-```bash
-# 命令行调试
-python src/run.py
+注册账号后，在账号设置里找到"API Key"或"密钥"选项，生成一个Key。
 
-# 打包成exe
-python src/build.py
+### 第二步：在Kioxus中配置
 
-# 运行测试
-pytest test/
-```
-
----
-
-## 架构总览
-
-```
-用户输入
-  ↓
-① Input（输入解析）
-  ↓
-② Memory（记忆检索）
-  ↓
-③ Think（链式推理）
-  ↓
-④ Plan（任务规划）
-  ↓
-⑤ Act（LLM生成 / 工具执行）
-  ↓
-⑥ Observe（结果检查）
-  ↓
-⑥.5 Verify（对抗性验证）
-  ↓
-⑦ Output（输出响应）
-  ↓
-⑧ Reflect（记忆存储）
-```
-
----
-
-## 核心循环
-
-每一次用户交互遵循8步循环：
-
-| 步骤 | 模块 | 做什么 |
-|------|------|--------|
-| ① Input | `input.py` | 解析消息，识别意图 |
-| ② Memory | `memory_bridge.py` | 检索记忆，注入上下文 |
-| ③ Think | `reasoning.py` | 链式推理，置信度评估 |
-| ④ Plan | `planner.py` + `decomposer.py` | 任务分解，步骤规划 |
-| ⑤ Act | `llm.py` + `tools.py` | LLM生成或工具执行 |
-| ⑥ Observe | `output.py` | 检查结果，格式化观察 |
-| ⑥.5 Verify | `verifier.py` | 对抗性验证（5项检查） |
-| ⑦ Output | `output.py` | 格式化并返回响应 |
-| ⑧ Reflect | `memory_bridge.py` | 有值得记的就存入记忆 |
-
----
-
-## 三大原则
-
-### 1. 对抗性验证（Adversarial Verification）
-
-不信任Agent的输出。Verifier独立运行5项规则检查（纯规则，不用LLM）：
-- 格式检查：输出长度、空值、结构
-- 工具检查：错误模式、空结果
-- 相关性：输入输出关键词重叠
-- 安全性：API key、密码泄露
-- 一致性：自相矛盾检测
-
-审查不通过自动重试（最多2次）。
-
-### 2. 硬边界隔离（Hard Boundary Isolation）
-
-代码在沙箱里跑，系统级强制执行：
-
-| 级别 | 网络 | 超时 | 内存 | 阻止导入 |
-|------|------|------|------|----------|
-| STRICT | ❌ | 5s | 128MB | os, subprocess, shutil |
-| NORMAL | ❌ | 10s | 256MB | os, subprocess, shutil |
-| RELAXED | ✅ | 30s | 512MB | — |
-| UNSAFE | ✅ | ∞ | ∞ | — |
-
-### 3. 可量化上下文（Quantifiable Context）
-
-Token预算追踪，每轮对话有明确的Token分配：
-
-| 层 | 比例 | 用途 |
-|----|------|------|
-| 系统提示 | 10% | 身份、规则 |
-| 记忆 | 30% | Memory Router输出 |
-| 历史 | 40% | 会话历史 |
-| 环境 | 5% | 时间、系统信息 |
-| 用户消息 | 15% | 当前输入 |
-
----
-
-## 记忆系统
-
-### 四层架构
-
-```
-core.md          — 身份、价值观、规则（每轮强制注入）
-reflection/      — 教训、认知、关系（按需检索）
-records/         — 日志→十日摘要→月度→年度（渐进压缩）
-today.md         — 今日上下文（每日清理）
-```
-
-### 设计决策
-
-| 决策 | 原因 |
-|------|------|
-| 代码管逻辑，LLM管语义 | LLM做不了数学和路由 |
-| BM25搜索，不用向量 | 无外部依赖，先"找得到"再谈"语义" |
-| 标签字典防漂移 | 记忆条目标签一致性 |
-| 压缩保留行动 | `[事实]` + `[行动]` 格式确保行为改变存活 |
-| P0-P3优先级 | P3在30天后遗忘，P0永不删除 |
-
----
-
-## 用户使用（exe）
-
-### 首次启动
-
-1. 双击 `Kioxus.exe`
-2. 点击左侧 **设置**
+1. 打开Kioxus
+2. 点击左侧的 **设置**
 3. 在 **LLM 配置** 区域填写：
-   - **Provider**：如 `xiaomi`、`openai`、`custom`
-   - **API URL**：如 `https://api.openai.com/v1/chat/completions`
-   - **API Key**：你的密钥
-   - **Model**：如 `gpt-4o`、`mimo-v2.5-pro`
+   - **Provider**：填你用的AI服务名称（比如 `xiaomi`、`openai`）
+   - **API URL**：填AI服务的地址（比如 `https://api.openai.com/v1/chat/completions`）
+   - **API Key**：填你刚才获取的密钥
+   - **Model**：填模型名称（比如 `gpt-4o`、`mimo-v2.5-pro`）
 4. 点击 **保存配置**
-5. 点击 **测试连接** 验证
-6. 开始对话
+5. 点击 **测试连接**，如果显示"连接成功"就说明配置好了
 
-### 界面功能
+### API URL 和 Model 怎么填
 
-- **对话**：输入消息，Kioxus思考后回复
-- **设置**：配置API Key、切换主题、调整字号
-- **清空对话**：清除所有聊天记录
+不同AI服务的API URL和Model不一样：
+
+| 服务 | API URL | Model |
+|------|---------|-------|
+| 小米MiMo | `https://token-plan-cn.xiaomimimo.com/v1/chat/completions` | `mimo-v2.5-pro` |
+| MiniMax | `https://api.minimax.chat/v1/text/chatcompletion_v2` | `MiniMax-Text-01` |
+| OpenAI | `https://api.openai.com/v1/chat/completions` | `gpt-4o` |
+| DeepSeek | `https://api.deepseek.com/v1/chat/completions` | `deepseek-chat` |
 
 ---
+
+## 开始对话
+
+配置好API Key后，在Kioxus的输入框里输入你想问的问题，按回车发送。
+
+Kioxus会思考一会儿，然后给你回答。
+
+**示例对话**：
+```
+你: 你好，你是谁？
+Kioxus: 你好！我是Kioxus，一个自主AI助手。我能和你对话、帮你执行代码、记住你说过的话。
+
+你: 帮我写一个Python程序，计算1到100的和
+Kioxus: 好的，代码如下：
+sum(range(1, 101))  # 结果是5050
+```
+
+---
+
+## 高级设置
+
+### 切换主题
+
+在设置中，可以切换深色/浅色主题。
+
+### 调整字号
+
+在设置中，可以调整字号：小/中/大。
+
+### 清空对话记录
+
+在设置中，点击"清空对话记录"可以清除所有聊天内容。
+
+### 多Key轮换
+
+如果你有多个API Key，可以在`.env`文件中用逗号分隔：
+
+```
+XIAOMI_TOKEN_PLAN_API_KEY=***
+```
+
+当一个Key被限流时，Kioxus会自动切换到下一个Key。
+
+---
+
+# 第四部分：进阶内容
 
 ## 开发者模式
+
+<details>
+<summary>点击展开开发者模式内容</summary>
 
 ### 项目结构
 
@@ -268,7 +387,7 @@ python src/run.py
 # 指定Provider
 python src/run.py --provider xiaomi
 python src/run.py --provider minimax
-python src/run.py --provider mock    # 测试模式
+python src/run.py --provider mock    # 测试模式，不需要真实API Key
 
 # 打包成exe
 python src/build.py
@@ -276,105 +395,12 @@ python src/build.py --onefile        # 单文件模式
 python src/build.py --clean          # 清理构建产物
 
 # 运行测试
-pytest test/                         # 全量（43个）
+pytest test/                         # 全量测试（43个）
 pytest test/ -v                      # 详细输出
 pytest test/ -x                      # 遇到失败就停止
 ```
 
----
-
-## 配置说明
-
-### 配置文件
-
-| 文件 | 用途 | 是否上传GitHub |
-|------|------|---------------|
-| `config/kioxus.json` | LLM Provider配置 | ✅ 是（不含密钥） |
-| `config/config.example.yaml` | 配置模板 | ✅ 是 |
-| `.env` | API密钥 | ❌ 否（.gitignore） |
-
-### config/kioxus.json
-
-```json
-{
-  "providers": {
-    "xiaomi": {
-      "api_url": "https://token-plan-cn.xiaomimimo.com/v1/chat/completions",
-      "api_key_env": "XIAOMI_TOKEN_PLAN_API_KEY",
-      "model": "mimo-v2.5-pro",
-      "max_tokens": 2048,
-      "temperature": 0.7
-    },
-    "openai": {
-      "api_url": "https://api.openai.com/v1/chat/completions",
-      "api_key_env": "OPENAI_API_KEY",
-      "model": "gpt-4o",
-      "max_tokens": 4096,
-      "temperature": 0.7
-    }
-  },
-  "default_provider": "xiaomi"
-}
-```
-
-### .env
-
-```env
-XIAOMI_TOKEN_PLAN_API_KEY=your-key-here
-OPENAI_API_KEY=your-key-here
-```
-
-支持逗号分隔的多Key轮换：
-```env
-XIAOMI_TOKEN_PLAN_API_KEY=key1,key2,key3
-```
-
----
-
-## LLM Provider
-
-### 支持的Provider
-
-| Provider | 环境变量 | 默认模型 |
-|----------|---------|---------|
-| 小米 MiMo | `XIAOMI_TOKEN_PLAN_API_KEY` | mimo-v2.5-pro |
-| MiniMax | `MINIMAX_API_KEY` | MiniMax-Text-01 |
-| OpenAI | `OPENAI_API_KEY` | gpt-4o |
-| 任意OpenAI兼容 | 自定义 | 自定义 |
-
-### 添加自定义Provider
-
-编辑 `config/kioxus.json`，在 `providers` 中添加：
-
-```json
-{
-  "my_provider": {
-    "api_url": "https://your-api.com/v1/chat/completions",
-    "api_key_env": "MY_PROVIDER_API_KEY",
-    "model": "your-model-name",
-    "max_tokens": 2048,
-    "temperature": 0.7
-  }
-}
-```
-
-然后在 `.env` 中添加对应的API Key。
-
-### 多Key轮换
-
-支持每个Provider配多个Key，限流时自动切换：
-
-```env
-XIAOMI_TOKEN_PLAN_API_KEY=key1,key2,key3
-```
-
-### Model Failover
-
-主Provider失败时自动尝试备用Provider。无需额外配置，注册多个Provider即可。
-
----
-
-## 核心引擎模块
+### 核心引擎模块
 
 | 模块 | 文件 | 作用 |
 |------|------|------|
@@ -395,9 +421,7 @@ XIAOMI_TOKEN_PLAN_API_KEY=key1,key2,key3
 | ProviderRegistry | `provider_registry.py` | Provider插件注册制 |
 | ConfigWatcher | `config_watcher.py` | 配置热更新 |
 
----
-
-## 记忆系统模块
+### 记忆系统模块
 
 | 模块 | 文件 | 作用 |
 |------|------|------|
@@ -408,9 +432,7 @@ XIAOMI_TOKEN_PLAN_API_KEY=key1,key2,key3
 | Janitor | `janitor.py` | 维护任务（flush/settle/compress） |
 | TagDictionary | `tags.py` | 标签字典（防漂移） |
 
----
-
-## 内置工具
+### 内置工具
 
 | 工具 | 功能 | 沙箱 |
 |------|------|------|
@@ -421,57 +443,116 @@ XIAOMI_TOKEN_PLAN_API_KEY=key1,key2,key3
 | `code_exec` | 执行Python/JS代码 | ✅ 默认沙箱隔离 |
 | `web_search` | 网页搜索 | — |
 
+</details>
+
 ---
 
-## 打包成exe
+## 配置文件说明
 
-```bash
-python src/build.py              # 目录模式（启动快，推荐）
-python src/build.py --onefile     # 单文件模式（一个exe，启动慢）
-python src/build.py --clean       # 清理构建产物
+<details>
+<summary>点击展开配置文件说明</summary>
+
+### 配置文件列表
+
+| 文件 | 用途 | 是否上传GitHub |
+|------|------|---------------|
+| `config/kioxus.json` | LLM Provider配置 | ✅ 是（不含密钥） |
+| `config/config.example.yaml` | 配置模板 | ✅ 是 |
+| `.env` | API密钥 | ❌ 否（.gitignore） |
+
+### config/kioxus.json
+
+```json
+{
+  "providers": {
+    "xiaomi": {
+      "api_url": "https://token-plan-cn.xiaomimimo.com/v1/chat/completions",
+      "api_key_env": "XIAOMI_TOKEN_PLAN_API_KEY",
+      "model": "mimo-v2.5-pro",
+      "max_tokens": 2048,
+      "temperature": 0.7
+    }
+  },
+  "default_provider": "xiaomi"
+}
 ```
 
-输出在 `src/dist/Kioxus/` 目录。
+**字段说明**：
+- `providers`：所有AI服务的配置
+- `api_url`：AI服务的地址
+- `api_key_env`：存API Key的环境变量名
+- `model`：使用的模型名称
+- `max_tokens`：最多生成多少个Token
+- `temperature`：回答的随机性（0=最确定，1=最随机）
+- `default_provider`：默认使用哪个AI服务
 
----
+### .env
 
-## Docker部署
-
-```bash
-# 构建镜像
-docker build -t kioxus:latest .
-
-# 运行
-docker run -d -p 8080:8080 --name kioxus kioxus:latest
-
-# 带环境变量
-docker run -d -p 8080:8080 \
-  -e XIAOMI_TOKEN_PLAN_API_KEY=your-key \
-  --name kioxus kioxus:latest
+```
+XIAOMI_TOKEN_PLAN_API_KEY=***
+OPENAI_API_KEY=***
 ```
 
+这个文件存放真实的API Key，不会上传到GitHub。
+
+</details>
+
 ---
 
-## 测试
+## LLM Provider配置
 
-```bash
-pytest test/                    # 全量测试（43个）
-pytest test/ -x                 # 遇到第一个失败就停止
-pytest test/ -v                 # 详细输出
+<details>
+<summary>点击展开LLM Provider配置</summary>
+
+### 支持的Provider
+
+| Provider | 环境变量 | 默认模型 |
+|----------|---------|---------|
+| 小米 MiMo | `XIAOMI_TOKEN_PLAN_API_KEY` | mimo-v2.5-pro |
+| MiniMax | `MINIMAX_API_KEY` | MiniMax-Text-01 |
+| OpenAI | `OPENAI_API_KEY` | gpt-4o |
+| DeepSeek | `DEEPSEEK_API_KEY` | deepseek-chat |
+| 任意OpenAI兼容 | 自定义 | 自定义 |
+
+### 添加自定义Provider
+
+编辑 `config/kioxus.json`，在 `providers` 中添加：
+
+```json
+{
+  "my_provider": {
+    "api_url": "https://your-api.com/v1/chat/completions",
+    "api_key_env": "MY_PROVIDER_API_KEY",
+    "model": "your-model-name",
+    "max_tokens": 2048,
+    "temperature": 0.7
+  }
+}
 ```
 
-| 测试文件 | 数量 | 覆盖 |
-|----------|------|------|
-| test_core_v2_smoke.py | 6 | 输入、会话、上下文、输出、LLM、引擎 |
-| test_phase2_smoke.py | 3 | 推理、规划器、引擎集成 |
-| test_phase3_smoke.py | 4 | 工具注册、内置工具、分解器 |
-| test_verifier.py | 7 | 格式/工具/相关性/安全/一致性检查、重试 |
-| test_sandbox.py | 9 | 沙箱各级别、超时、阻止导入 |
-| test_context_budget.py | 8 | Token预算、软限制、硬限制 |
-| test_memory_v2.py | 3 | 记忆存储、路由、搜索 |
-| test_integration.py | 3 | 真实LLM调用、记忆系统、引擎全流程 |
+然后在 `.env` 中添加对应的API Key：
+
+```
+MY_PROVIDER_API_KEY=***
+```
+
+### 多Key轮换
+
+支持每个Provider配多个Key，限流时自动切换。在 `.env` 中用逗号分隔：
+
+```
+XIAOMI_TOKEN_PLAN_API_KEY=***
+```
+
+### Model Failover
+
+主Provider失败时自动尝试备用Provider。无需额外配置，注册多个Provider即可。
+
+</details>
 
 ---
+
+# 第五部分：参考
 
 ## 版本历史
 
@@ -486,20 +567,29 @@ pytest test/ -v                 # 详细输出
 
 ## FAQ
 
-### Q: 支持哪些LLM？
-A: 支持任意OpenAI兼容API。内置小米MiMo和MiniMax，可自由添加。
+### Q: Kioxus是什么？
+A: Kioxus是一个AI助手，能自己思考、记忆、使用工具、验证回答。你可以把它理解为一个"本地版的ChatGPT"。
+
+### Q: Kioxus免费吗？
+A: Kioxus本身免费开源。但你需要一个AI服务的API Key，AI服务可能会收费。
+
+### Q: 支持哪些AI服务？
+A: 支持任意OpenAI兼容的API。内置小米MiMo和MiniMax，可自由添加。
 
 ### Q: API Key安全吗？
 A: .env在.gitignore中，不会上传GitHub。代码内部使用Key轮换和限流重试。
 
 ### Q: 能离线使用吗？
-A: 不行，需要网络连接LLM API服务。
+A: 不行，需要网络连接AI服务。
 
-### Q: 怎么添加新的LLM Provider？
+### Q: 怎么添加新的AI服务？
 A: 编辑config/kioxus.json，在providers中添加，然后在.env中填入API Key。
 
 ### Q: exe有多大？
 A: 约34MB（含依赖），解压后双击即用。
+
+### Q: 遇到问题怎么办？
+A: 在 https://github.com/kioxus-1/kioxus/issues 提交问题。
 
 ---
 
