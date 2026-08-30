@@ -37,7 +37,7 @@ kioxus/
 │   ├── gui/                 #   桌面界面
 │   │   └── desktop.py       #     PyWebView桌面窗口
 │   ├── main.py              #   系统入口
-│   └── run.py               #   命令行调试
+│   └── cli.py               #   命令行调试工具（开发者用）
 │
 ├── config/                  # 配置文件
 │   ├── config.example.yaml  #   配置模板
@@ -50,45 +50,56 @@ kioxus/
 │   └── simple_demo.py       #   快速上手demo
 │
 ├── docs/                    # 项目文档
+│   ├── architecture.md      #   架构说明
+│   ├── api.md               #   核心接口
+│   └── install.md           #   安装指南
+│
 ├── test/                    # 测试代码
 │
 ├── requirements.txt         # Python依赖
+├── requirements-dev.txt     # 开发测试依赖
 ├── README.md                # 项目说明
 ├── LICENSE                  # MIT协议
+├── CHANGELOG.md             # 版本更新记录
+├── CONTRIBUTING.md          # 贡献指南
 └── .gitignore               # Git忽略规则
 ```
 
 ## 快速开始
 
-### 下载使用（推荐）
-
-前往 [Releases](https://github.com/kioxus-1/kioxus/releases) 页面下载最新版本：
-
-1. 下载 `Kioxus.exe`
-2. 双击运行
-3. 在设置中填写API Key即可使用
-
-### 从源码运行
-
 ```bash
+# 1. 克隆
 git clone https://github.com/kioxus-1/kioxus.git
 cd kioxus
+
+# 2. 安装依赖
 pip install -r requirements.txt
+
+# 3. 复制配置并填入密钥
 cp config/config.example.yaml config/config.yaml
+# 编辑 config/config.yaml，填入你的 LLM Provider 信息
+# 创建 .env 文件，填入 API Key
+
+# 4. 运行
 python src/main.py
 ```
 
-### 命令行调试
+### 其他运行方式
 
 ```bash
-python src/run.py
-```
+# 命令行调试（开发者）
+python src/cli.py
 
-### 打包成exe
+# 快速体验
+python examples/simple_demo.py
 
-```bash
+# 打包成exe
 python scripts/build.py
 ```
+
+### 下载exe（无需Python环境）
+
+前往 [Releases](https://github.com/kioxus-1/kioxus/releases) 页面下载最新版本，解压双击即用。
 
 ## 功能介绍
 
@@ -119,9 +130,15 @@ pytest test/ -v                 # 详细输出
 | 2026-08-10 | v0.3 | 验证器、沙箱、上下文预算 |
 | 2026-08-30 | v0.3.0 | 项目整理，开源发布 |
 
+详见 [CHANGELOG.md](CHANGELOG.md)
+
 ## 开源协议
 
 本项目基于 [MIT License](LICENSE) 开源，可免费学习、使用和二次开发。
+
+## 贡献
+
+欢迎提交 PR、Issue。详见 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## 联系方式
 
