@@ -428,7 +428,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);height:100vh
       <div class="sp-divider"></div>
       <div class="sp-group">
         <div class="sp-label">LLM 配置</div>
-        <div class="sp-hint" style="margin-bottom:12px">配置API密钥后即可使用，支持任意OpenAI兼容API</div>
+        <div class="sp-hint" style="margin-bottom:12px">配置API密钥后即可使用，支持任意标准API</div>
         <div class="sp-row"><label>Provider</label><input type="text" id="cfg-provider" placeholder="如 xiaomi / openai / custom" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;"></div>
         <div class="sp-row"><label>API URL</label><input type="text" id="cfg-url" placeholder="https://api.openai.com/v1/chat/completions" style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;"></div>
         <div class="sp-row"><label>API Key</label><input type="password" id="cfg-key" placeholder="sk-..." style="flex:1;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;"></div>

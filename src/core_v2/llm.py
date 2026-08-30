@@ -1,4 +1,4 @@
-"""
+﻿"""
 Kioxus Core v2 — LLM 客户端
 统一调用接口、多模型支持、流式输出
 
@@ -111,8 +111,8 @@ class BaseProvider:
         return result
 
 
-class OpenAICompatibleProvider(BaseProvider):
-    """OpenAI兼容API（支持大多数国产模型）"""
+class 标准CompatibleProvider(BaseProvider):
+    """标准API（支持大多数国产模型）"""
 
     # 限流状态码
     RATE_LIMIT_CODES = {429, 529}
@@ -242,7 +242,7 @@ class LLMClient:
         if config.name == "mock":
             provider = MockProvider(config)
         else:
-            provider = OpenAICompatibleProvider(config)
+            provider = 标准CompatibleProvider(config)
 
         self._providers[config.name] = provider
         self._role_map[config.role] = config.name

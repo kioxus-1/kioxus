@@ -1,4 +1,4 @@
-# Kioxus
+﻿# Kioxus
 
 一款轻量、稳定、可拓展的自主Agent框架
 
@@ -24,7 +24,7 @@ Kioxus 是一套开箱即用的自主Agent解决方案，能独立思考、记�
 - 语言：Python 3.11+
 - 框架：Flask（Web服务）、PyWebView（桌面窗口）
 - 数据存储：文件系统 + SQLite
-- LLM：支持任意OpenAI兼容API（小米MiMo、MiniMax、OpenAI等）
+- LLM：支持多种AI服务（小米MiMo、MiniMax、OpenAI等）
 - 打包：PyInstaller（生成独立 exe）
 
 ## 下载使用

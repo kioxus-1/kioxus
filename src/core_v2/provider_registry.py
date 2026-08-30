@@ -1,7 +1,7 @@
-"""
+﻿"""
 Provider Registry — 插件化Provider管理
 
-借鉴OpenClaw的Provider插件架构：
+Provider插件架构：
 - Provider自注册，不硬编码
 - 支持多Key轮换（限流时自动切换）
 - 统一的Provider接口
