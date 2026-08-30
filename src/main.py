@@ -81,33 +81,28 @@ class Kioxus:
         self.decomposer = get_decomposer()
 
     def _setup_providers(self):
-        """配置 LLM providers"""
-        import os
+        """从 config/kioxus.json 读取 provider 配置，用户可自由添加"""
+        import json
+        config_path = os.path.join(self.base_dir, "config", "kioxus.json")
 
-        # 小米 MiMo
-        xiaomi_key = os.getenv("XIAOMI_TOKEN_PLAN_API_KEY", "")
-        if xiaomi_key:
-            self.llm.register_provider(ProviderConfig(
-                name="xiaomi",
-                api_url="https://token-plan-cn.xiaomimimo.com/v1/chat/completions",
-                api_key=xiaomi_key,
-                model="mimo-v2.5-pro",
-                role=ModelRole.DEFAULT,
-                max_tokens=2048,
-                temperature=0.7,
-            ))
+        if not os.path.exists(config_path):
+            return
 
-        # MiniMax
-        minimax_key = os.getenv("MINIMAX_API_KEY", "")
-        if minimax_key:
+        with open(config_path, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+
+        for name, pcfg in cfg.get("providers", {}).items():
+            api_key = os.getenv(pcfg.get("api_key_env", ""), "")
+            if not api_key:
+                continue
             self.llm.register_provider(ProviderConfig(
-                name="minimax",
-                api_url="https://api.minimax.chat/v1/text/chatcompletion_v2",
-                api_key=minimax_key,
-                model="MiniMax-Text-01",
+                name=name,
+                api_url=pcfg["api_url"],
+                api_key=api_key,
+                model=pcfg.get("model", ""),
                 role=ModelRole.DEFAULT,
-                max_tokens=2048,
-                temperature=0.7,
+                max_tokens=pcfg.get("max_tokens", 2048),
+                temperature=pcfg.get("temperature", 0.7),
             ))
 
     def chat(self, message: str) -> str:
