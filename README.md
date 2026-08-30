@@ -1,5 +1,9 @@
-# Kioxus
+﻿# Kioxus
 
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/Tests-48%20passed-green.svg)](#测试)
 一款轻量、稳定、可拓展的自主Agent框架
 
 ---
@@ -144,3 +148,9 @@ pytest test/ -v                 # 详细输出
 
 作者：kioxus-1
 仓库：https://github.com/kioxus-1/kioxus
+
+## Roadmap
+
+- v0.4: 插件系统、多轮反思优化
+- v0.5: 多Agent协作、向量记忆检索
+- v1.0: 稳定API、完整文档、生产就绪

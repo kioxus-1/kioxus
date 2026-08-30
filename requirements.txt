@@ -1,27 +1,6 @@
-# Kioxus Dependencies
-
-# Web Framework
-flask>=2.3.0
-werkzeug>=2.3.0
-python-dotenv>=1.0.0
-
-# Data & Computing
-numpy>=1.24.0
-
-# HTTP & Networking
-requests>=2.31.0
-
-# Desktop App
-pywebview>=5.0
-
-# Database
-# (uses built-in sqlite3 from Python standard library)
-
-# Testing
-pytest>=7.4.0
-
-# Packaging
-pyinstaller>=6.0
-
-# Development
-tqdm>=4.66.0
+﻿flask>=2.0,<4
+python-dotenv>=1.0,<2
+numpy>=1.24,<3
+requests>=2.31,<3
+pywebview>=4.0,<6
+tqdm>=4.60,<5
