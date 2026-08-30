@@ -49,10 +49,42 @@ class ProviderConfig:
     api_url: str
     api_key: str
     model: str
+    api_keys: List[str] = field(default_factory=list)  # 多Key支持
     role: ModelRole = ModelRole.DEFAULT
     max_tokens: int = 4096
     temperature: float = 0.7
     headers: Dict = field(default_factory=dict)
+    # 轮换状态
+    _current_key_idx: int = field(default=0, repr=False)
+    _key_failures: Dict = field(default_factory=dict, repr=False)
+
+    def __post_init__(self):
+        if not self.api_keys and self.api_key:
+            self.api_keys = [self.api_key]
+
+    @property
+    def current_api_key(self) -> str:
+        if self.api_keys:
+            return self.api_keys[self._current_key_idx % len(self.api_keys)]
+        return self.api_key
+
+    def rotate_key(self):
+        import time
+        now = time.time()
+        for i in range(len(self.api_keys)):
+            idx = (self._current_key_idx + 1 + i) % len(self.api_keys)
+            last_fail = self._key_failures.get(idx, 0)
+            if now - last_fail > 60:
+                self._current_key_idx = idx
+                return self.api_keys[idx]
+        return None
+
+    def mark_key_failed(self):
+        import time
+        self._key_failures[self._current_key_idx] = time.time()
+
+    def mark_key_success(self):
+        self._key_failures.pop(self._current_key_idx, None)
 
 
 # ============== Provider 实现 ==============
@@ -82,54 +114,96 @@ class BaseProvider:
 class OpenAICompatibleProvider(BaseProvider):
     """OpenAI兼容API（支持大多数国产模型）"""
 
+    # 限流状态码
+    RATE_LIMIT_CODES = {429, 529}
+
     def chat(self, messages: List[LLMMessage], stream: bool = False) -> LLMResponse:
-        """chat"""
+        """chat — 支持多Key轮换和限流重试"""
         import urllib.request
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.config.api_key}",
-            **self.config.headers,
-        }
+        max_retries = len(self.config.api_keys) if self.config.api_keys else 1
+        last_error = None
 
-        payload = {
-            "model": self.config.model,
-            "messages": self._format_messages(messages),
-            "max_tokens": self.config.max_tokens,
-            "temperature": self.config.temperature,
-            "stream": False,  # Phase 1 不做流式
-        }
+        for attempt in range(max_retries):
+            current_key = self.config.current_api_key
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {current_key}",
+                **self.config.headers,
+            }
 
-        data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(self.config.api_url, data=data, headers=headers, method="POST")
+            payload = {
+                "model": self.config.model,
+                "messages": self._format_messages(messages),
+                "max_tokens": self.config.max_tokens,
+                "temperature": self.config.temperature,
+                "stream": False,
+            }
 
-        start = time.time()
-        try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                body = json.loads(resp.read().decode("utf-8"))
-            latency = (time.time() - start) * 1000
+            data = json.dumps(payload).encode("utf-8")
+            req = urllib.request.Request(self.config.api_url, data=data, headers=headers, method="POST")
 
-            content = body["choices"][0]["message"]["content"]
-            usage = body.get("usage", {})
+            start = time.time()
+            try:
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    body = json.loads(resp.read().decode("utf-8"))
+                latency = (time.time() - start) * 1000
 
-            return LLMResponse(
-                content=content,
-                model=self.config.model,
-                provider=self.config.name,
-                tokens_used=usage.get("total_tokens", 0),
-                latency_ms=latency,
-                metadata={"status": "ok"},
-            )
-        except Exception as e:
-            latency = (time.time() - start) * 1000
-            logger.error(f"LLM调用失败 [{self.config.name}]: {e}")
-            return LLMResponse(
-                content=f"[LLM调用失败: {e}]",
-                model=self.config.model,
-                provider=self.config.name,
-                latency_ms=latency,
-                metadata={"status": "error", "error": str(e)},
-            )
+                content = body["choices"][0]["message"]["content"]
+                usage = body.get("usage", {})
+
+                # 成功，标记Key可用
+                if hasattr(self.config, 'mark_key_success'):
+                    self.config.mark_key_success()
+
+                return LLMResponse(
+                    content=content,
+                    model=self.config.model,
+                    provider=self.config.name,
+                    tokens_used=usage.get("total_tokens", 0),
+                    latency_ms=latency,
+                    metadata={"status": "ok", "attempt": attempt + 1},
+                )
+            except urllib.error.HTTPError as e:
+                latency = (time.time() - start) * 1000
+                last_error = e
+
+                if e.code in self.RATE_LIMIT_CODES and self.config.api_keys and len(self.config.api_keys) > 1:
+                    # 限流，轮换Key重试
+                    if hasattr(self.config, 'mark_key_failed'):
+                        self.config.mark_key_failed()
+                    new_key = self.config.rotate_key()
+                    if new_key:
+                        logger.warning(f"[{self.config.name}] 限流 {e.code}，轮换Key重试 ({attempt+1}/{max_retries})")
+                        continue
+
+                logger.error(f"LLM调用失败 [{self.config.name}]: {e}")
+                return LLMResponse(
+                    content=f"[LLM调用失败: {e}]",
+                    model=self.config.model,
+                    provider=self.config.name,
+                    latency_ms=latency,
+                    metadata={"status": "error", "code": e.code, "error": str(e)},
+                )
+            except Exception as e:
+                latency = (time.time() - start) * 1000
+                last_error = e
+                logger.error(f"LLM调用失败 [{self.config.name}]: {e}")
+                return LLMResponse(
+                    content=f"[LLM调用失败: {e}]",
+                    model=self.config.model,
+                    provider=self.config.name,
+                    latency_ms=latency,
+                    metadata={"status": "error", "error": str(e)},
+                )
+
+        # 所有重试都失败
+        return LLMResponse(
+            content=f"[LLM调用失败: 所有Key均限流 ({max_retries}次尝试)]",
+            model=self.config.model,
+            provider=self.config.name,
+            metadata={"status": "error", "error": "all_keys_rate_limited"},
+        )
 
 
 class MockProvider(BaseProvider):
@@ -203,9 +277,37 @@ class LLMClient:
         role: ModelRole = None,
         stream: bool = False,
     ) -> LLMResponse:
-        """生成响应"""
-        provider = self.get_provider(role)
-        return provider.chat(messages, stream=stream)
+        """生成响应 — 支持Model Failover（主Provider失败自动切备用）"""
+        primary_name = self._role_map.get(role or self._default_role)
+        provider_order = []
+
+        # 先尝试指定角色的Provider
+        if primary_name and primary_name in self._providers:
+            provider_order.append(primary_name)
+
+        # 再尝试DEFAULT角色
+        default_name = self._role_map.get(ModelRole.DEFAULT)
+        if default_name and default_name not in provider_order:
+            provider_order.append(default_name)
+
+        # 最后尝试所有其他Provider作为备用
+        for name in self._providers:
+            if name not in provider_order and name != "mock":
+                provider_order.append(name)
+
+        last_response = None
+        for pname in provider_order:
+            provider = self._providers[pname]
+            response = provider.chat(messages, stream=stream)
+            if response.metadata.get("status") == "ok":
+                return response
+            last_response = response
+            logger.warning(f"Provider {pname} failed, trying next...")
+
+        # 所有Provider都失败
+        if last_response:
+            return last_response
+        raise ValueError("No provider available")
 
     def generate_from_context(
         self,
