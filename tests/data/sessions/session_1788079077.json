@@ -1,0 +1,22 @@
+{
+  "session_id": "session_1788079077",
+  "turns": [
+    {
+      "role": "user",
+      "content": "你好，你是谁？",
+      "timestamp": 1788079077.639726,
+      "metadata": {
+        "intent": "chat"
+      }
+    },
+    {
+      "role": "assistant",
+      "content": "[LLM调用失败: HTTP Error 401: Unauthorized]",
+      "timestamp": 1788079077.639727,
+      "metadata": {}
+    }
+  ],
+  "created_at": 1788079077.6397223,
+  "last_active": 1788079077.6397274,
+  "metadata": {}
+}
